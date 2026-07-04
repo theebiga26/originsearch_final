@@ -661,16 +661,15 @@ function NetworkTopology() {
       </svg>
 
       <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4 sm:grid-cols-4">
-        {[
+        {([
           [Server, "128 clusters"],
           [Cpu, "52,340 GPUs"],
           [Cloud, "24 regions"],
           [Activity, "1.2 Tbps fabric"],
-        ].map(([Icon, label], i) => (
+        ] as const).map(([Icon, label], i) => (
           <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-            {/* @ts-expect-error dynamic icon */}
             <Icon className="h-4 w-4 text-primary" strokeWidth={1.6} />
-            <span className="font-mono">{label as string}</span>
+            <span className="font-mono">{label}</span>
           </div>
         ))}
       </div>
