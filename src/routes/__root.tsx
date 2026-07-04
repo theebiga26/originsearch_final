@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "VertexGrid orchestrates GPU infrastructure, accelerates AI workloads, and scales distributed intelligence across cloud and edge environments.",
       },
       { name: "author", content: "VertexGrid" },
-      { name: "theme-color", content: "#273338" },
+      { name: "theme-color", content: "#060F2E" },
       { property: "og:title", content: "VertexGrid — The Enterprise AI Compute Platform" },
       {
         property: "og:description",
