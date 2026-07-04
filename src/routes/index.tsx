@@ -4,8 +4,11 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   Cpu, Network, Layers, Gauge, Cloud, Shield, ArrowRight, Boxes, Zap,
   GitBranch, LineChart, Activity, Server, Sparkles, CheckCircle2, XCircle,
-  Workflow, Database, Rocket, ChevronRight,
+  Workflow, Database, Rocket, ChevronRight, Phone, Play,
 } from "lucide-react";
+import heroGpu from "@/assets/hero-gpu.jpg";
+import heroDatacenter from "@/assets/hero-datacenter.jpg";
+import heroNetwork from "@/assets/hero-network.jpg";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
