@@ -1206,6 +1206,29 @@ function WhyVertex() {
 
 /* ---------- Final CTA ---------- */
 
+function FloatingParticles({ count = 30 }: { count?: number }) {
+  const items = Array.from({ length: count });
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {items.map((_, i) => {
+        const size = 1 + Math.random() * 2.5;
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        const d = 6 + Math.random() * 10;
+        return (
+          <motion.span
+            key={i}
+            className="absolute rounded-full bg-primary/60"
+            style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, boxShadow: "0 0 8px var(--color-glow)" }}
+            animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
+            transition={{ duration: d, repeat: Infinity, ease: "easeInOut", delay: Math.random() * 4 }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 function FinalCTA() {
   return (
     <section id="demo" className="relative overflow-hidden py-32">
