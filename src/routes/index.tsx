@@ -54,8 +54,12 @@ function Stagger({ children, className = "" }: { children: ReactNode; className?
 
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [overLight, setOverLight] = useState(true);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12);
+      setOverLight(window.scrollY < window.innerHeight - 120);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -69,35 +73,40 @@ function Nav() {
     ["Industries", "#industries"],
   ];
 
+  const shell = scrolled
+    ? overLight
+      ? "backdrop-blur-xl bg-[#F7F5EF]/85 border-b border-[#0B1E4F]/10"
+      : "backdrop-blur-xl bg-[#060F2E]/80 border-b border-white/10"
+    : "bg-transparent";
+  const linkColor = overLight ? "text-[#0B1E4F]/70 hover:text-[#0B1E4F]" : "text-[#EAF2FF]/75 hover:text-white";
+  const brandColor = overLight ? "text-[#0B1E4F]" : "text-white";
+
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled ? "backdrop-blur-xl bg-background/70 border-b border-border" : "bg-transparent"
-      }`}
-    >
+    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${shell}`}>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#top" className="flex items-center gap-2">
-          <LogoMark />
+        <a href="#top" className={`flex items-center gap-2 ${brandColor}`}>
+          <LogoMark dark={overLight} />
           <span className="font-display text-lg font-bold tracking-tight">VertexGrid</span>
-          <span className="font-mono text-[10px] text-muted-foreground">.one</span>
+          <span className="font-mono text-[10px] opacity-60">.one</span>
         </a>
         <nav className="hidden items-center gap-8 md:flex">
           {links.map(([label, href]) => (
-            <a key={href} href={href} className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <a key={href} href={href} className={`text-sm transition-colors ${linkColor}`}>
               {label}
             </a>
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <a
-            href="#contact"
-            className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline"
-          >
+          <a href="#contact" className={`hidden text-sm transition-colors sm:inline ${linkColor}`}>
             Contact Sales
           </a>
           <a
             href="#demo"
-            className="group inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:shadow-[0_0_30px_var(--color-glow)]"
+            className={`group inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
+              overLight
+                ? "bg-[#0B1E4F] text-white hover:bg-[#14286B]"
+                : "bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--color-glow)]"
+            }`}
           >
             Request Demo
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -108,225 +117,254 @@ function Nav() {
   );
 }
 
-function LogoMark() {
+function LogoMark({ dark = false }: { dark?: boolean }) {
   return (
-    <div className="relative grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-primary to-secondary ring-hairline">
-      <svg viewBox="0 0 24 24" className="h-4 w-4 text-primary-foreground">
-        <path d="M12 2l9 5-9 5-9-5 9-5zm0 8l9 5-9 5-9-5 9-5z" fill="currentColor" opacity=".9" />
+    <div
+      className={`relative grid h-8 w-8 place-items-center rounded-lg ring-hairline ${
+        dark ? "bg-gradient-to-br from-[#0B1E4F] to-[#1E3A8A]" : "bg-gradient-to-br from-primary to-accent"
+      }`}
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4 text-white">
+        <path d="M12 2l9 5-9 5-9-5 9-5zm0 8l9 5-9 5-9-5 9-5z" fill="currentColor" opacity=".95" />
       </svg>
     </div>
   );
 }
 
-/* ---------- Hero ---------- */
+/* ---------- Hero (light "poster" section) ---------- */
 
 function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
-  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
 
   return (
-    <section id="top" ref={ref} className="relative flex min-h-screen items-center overflow-hidden pt-24">
-      {/* Background layers */}
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-60 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-radial-glow" />
-      <Particles count={40} />
+    <section
+      id="top"
+      ref={ref}
+      className="relative flex min-h-screen items-center overflow-hidden bg-paper pt-28 pb-20 text-[#0B1E4F]"
+    >
+      {/* decorative shapes */}
+      <div className="pointer-events-none absolute inset-0 ink-dotgrid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
+      <PosterShapes />
 
-      <motion.div style={{ y, opacity }} className="relative z-10 mx-auto grid w-full max-w-7xl gap-12 px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-        <div>
+      <motion.div style={{ y }} className="relative z-10 mx-auto grid w-full max-w-7xl gap-14 px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+        {/* Left: copy */}
+        <div className="order-2 lg:order-1">
           <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--color-glow)]" />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#0B1E4F]/15 bg-white/70 px-3 py-1 backdrop-blur">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" />
+              <span className="font-mono text-[11px] uppercase tracking-wider text-[#0B1E4F]/70">
                 Enterprise AI Compute · v2026.1
               </span>
             </div>
           </Reveal>
+
           <Reveal delay={0.05}>
-            <h1 className="mt-6 font-display text-5xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">
-              The Enterprise
-              <br />
-              <span className="text-gradient">AI Compute Platform</span>
+            <h1 className="mt-6 font-display text-[3rem] font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-[5.5rem]">
+              <span className="block font-serif text-3xl italic font-medium text-[#1E3A8A] sm:text-4xl lg:text-5xl">
+                Powering
+              </span>
+              <span className="block text-gradient-ink">THE AI GRID</span>
             </h1>
           </Reveal>
+
           <Reveal delay={0.12}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              Orchestrate GPU infrastructure, accelerate AI workloads, and scale distributed intelligence
-              across cloud and edge environments.
+            <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-[#0B1E4F]/20 bg-white/60 px-5 py-2 backdrop-blur">
+              <span className="text-sm font-medium text-[#0B1E4F]">
+                Orchestrate GPUs. Train intelligence. Ship inference.
+              </span>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.18}>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#0B1E4F]/70">
+              VertexGrid unifies GPU clusters, cloud regions and edge nodes behind a single
+              intelligent compute plane — built for the era of frontier AI.
             </p>
           </Reveal>
-          <Reveal delay={0.2}>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
+
+          <Reveal delay={0.24}>
+            <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href="#demo"
-                className="group inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_10px_40px_-10px_var(--color-glow)] transition-all hover:shadow-[0_10px_60px_-5px_var(--color-glow)]"
+                className="group inline-flex items-center gap-2 rounded-full bg-[#0B1E4F] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_-15px_rgba(11,30,79,0.6)] transition-all hover:bg-[#14286B]"
               >
-                Request Demo
+                Book a Demo
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </a>
               <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-all hover:bg-surface-elevated"
+                href="#platform"
+                className="group inline-flex items-center gap-2 rounded-full border border-[#0B1E4F]/25 bg-white/70 px-6 py-3 text-sm font-semibold text-[#0B1E4F] backdrop-blur transition-all hover:bg-white"
               >
-                Contact Sales
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#0B1E4F] text-white">
+                  <Play className="h-3 w-3 fill-white" />
+                </span>
+                Explore Platform
               </a>
             </div>
           </Reveal>
-          <Reveal delay={0.28}>
-            <div className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-border pt-6">
+
+          <Reveal delay={0.32}>
+            <div className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-[#0B1E4F]/15 pt-6">
               {[
                 ["50K+", "GPU cores"],
                 ["99.99%", "Availability"],
                 ["3.5×", "Faster training"],
               ].map(([v, l]) => (
                 <div key={l}>
-                  <div className="font-mono text-2xl font-semibold text-foreground">{v}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">{l}</div>
+                  <div className="font-display text-2xl font-bold text-[#0B1E4F]">{v}</div>
+                  <div className="mt-1 text-xs text-[#0B1E4F]/60">{l}</div>
                 </div>
               ))}
             </div>
           </Reveal>
+
+          <Reveal delay={0.38}>
+            <div className="mt-8 flex flex-wrap items-center gap-6 text-xs text-[#0B1E4F]/60">
+              <span className="inline-flex items-center gap-2">
+                <Phone className="h-3.5 w-3.5" /> Talk to sales · +1 (415) 555-0140
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <Shield className="h-3.5 w-3.5" /> SOC 2 · ISO 27001 · HIPAA
+              </span>
+            </div>
+          </Reveal>
         </div>
 
-        <Reveal delay={0.2}>
-          <HeroCompute />
-        </Reveal>
+        {/* Right: three arched image frames */}
+        <div className="relative order-1 lg:order-2">
+          <PosterArches />
+        </div>
       </motion.div>
+
+      {/* wave divider into dark sections */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-24">
+        <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className="h-full w-full">
+          <path d="M0 60 C240 110 480 20 720 50 C960 80 1200 30 1440 60 L1440 100 L0 100 Z" fill="#060F2E" />
+        </svg>
+      </div>
     </section>
   );
 }
 
-function Particles({ count = 30 }: { count?: number }) {
-  const items = Array.from({ length: count });
+function PosterShapes() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {items.map((_, i) => {
-        const size = 1 + Math.random() * 2.5;
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const d = 6 + Math.random() * 10;
-        return (
-          <motion.span
-            key={i}
-            className="absolute rounded-full bg-primary/60"
-            style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, boxShadow: "0 0 8px var(--color-glow)" }}
-            animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
-            transition={{ duration: d, repeat: Infinity, ease: "easeInOut", delay: Math.random() * 4 }}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
-function HeroCompute() {
-  return (
-    <div className="relative aspect-square w-full max-w-[560px] justify-self-center">
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/40 via-transparent to-secondary/20 blur-2xl" />
-      <div className="relative h-full w-full rounded-3xl border border-border bg-surface/40 p-6 backdrop-blur-xl ring-hairline">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_var(--color-glow)]" />
-            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">cluster · us-east-1</span>
-          </div>
-          <span className="font-mono text-[10px] text-muted-foreground">live</span>
-        </div>
-
-        <svg viewBox="0 0 400 400" className="mt-2 h-[calc(100%-2.5rem)] w-full">
-          <defs>
-            <radialGradient id="hg" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#9CB080" stopOpacity="0.35" />
-              <stop offset="100%" stopColor="#9CB080" stopOpacity="0" />
-            </radialGradient>
-            <linearGradient id="hl" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#9CB080" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#618764" stopOpacity="0.2" />
-            </linearGradient>
-          </defs>
-          <circle cx="200" cy="200" r="170" fill="url(#hg)" />
-          {/* orbit rings */}
-          {[70, 120, 170].map((r, i) => (
-            <motion.circle
-              key={r}
-              cx="200" cy="200" r={r}
-              fill="none" stroke="rgba(255,255,255,0.08)" strokeDasharray="2 6"
-              animate={{ rotate: i % 2 === 0 ? 360 : -360 }}
-              transition={{ duration: 40 + i * 15, repeat: Infinity, ease: "linear" }}
-              style={{ transformOrigin: "200px 200px" }}
-            />
-          ))}
-          {/* central node */}
-          <g>
-            <circle cx="200" cy="200" r="26" fill="#2B5748" stroke="#9CB080" strokeWidth="1.5" />
-            <circle cx="200" cy="200" r="8" fill="#9CB080" />
-          </g>
-          {/* nodes */}
-          {nodePositions.map((p, i) => (
-            <NodeDot key={i} x={p.x} y={p.y} delay={i * 0.15} />
-          ))}
-          {/* connection lines */}
-          {nodePositions.map((p, i) => (
-            <motion.line
-              key={`l${i}`}
-              x1="200" y1="200" x2={p.x} y2={p.y}
-              stroke="url(#hl)" strokeWidth="1"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.8 }}
-              transition={{ duration: 1.2, delay: 0.3 + i * 0.08, ease: "easeOut" }}
-            />
-          ))}
-          {/* pulses along lines */}
-          {nodePositions.map((p, i) => (
-            <motion.circle
-              key={`p${i}`}
-              r="2.5" fill="#F5F7F6"
-              animate={{
-                cx: [200, p.x], cy: [200, p.y], opacity: [0, 1, 0],
-              }}
-              transition={{ duration: 2.5, repeat: Infinity, delay: i * 0.4, ease: "easeInOut" }}
-            />
-          ))}
-        </svg>
-
-        {/* stat pills */}
-        <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 gap-2">
-          {[
-            ["GPU util", "87%"],
-            ["Nodes", "128"],
-            ["Latency", "4.2ms"],
-          ].map(([k, v]) => (
-            <div key={k} className="rounded-lg border border-border bg-background/60 px-3 py-2 backdrop-blur">
-              <div className="font-mono text-[10px] uppercase text-muted-foreground">{k}</div>
-              <div className="font-mono text-sm font-semibold text-foreground">{v}</div>
-            </div>
-          ))}
+      {/* sun burst top */}
+      <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#60A5FA]/25 via-[#22D3EE]/10 to-transparent blur-2xl" />
+      {/* dashed circle */}
+      <svg className="absolute -left-24 top-24 h-64 w-64 text-[#0B1E4F]/20" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 6" />
+        <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 6" />
+      </svg>
+      {/* offer badge */}
+      <div className="absolute right-6 top-28 hidden h-24 w-24 rotate-6 items-center justify-center rounded-full border border-[#0B1E4F]/25 bg-white/80 text-center shadow-[0_16px_40px_-15px_rgba(11,30,79,0.4)] backdrop-blur md:flex">
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-widest text-[#0B1E4F]/60">GPU</div>
+          <div className="font-display text-lg font-bold text-[#0B1E4F]">H100</div>
+          <div className="font-mono text-[10px] text-[#2563EB]">READY</div>
         </div>
       </div>
+      {/* tiny sparkles */}
+      {[
+        [15, 60], [85, 20], [70, 78], [30, 85], [90, 55],
+      ].map(([x, y], i) => (
+        <motion.span
+          key={i}
+          className="absolute h-2 w-2 rounded-full bg-[#2563EB]"
+          style={{ left: `${x}%`, top: `${y}%` }}
+          animate={{ scale: [1, 1.6, 1], opacity: [0.3, 1, 0.3] }}
+          transition={{ duration: 3 + i * 0.4, repeat: Infinity }}
+        />
+      ))}
+      {/* soft blob bottom left */}
+      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#60A5FA]/20 blur-3xl" />
+      <div className="absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#22D3EE]/15 blur-3xl" />
     </div>
   );
 }
 
-const nodePositions = [
-  { x: 200, y: 40 }, { x: 340, y: 120 }, { x: 360, y: 260 },
-  { x: 260, y: 360 }, { x: 120, y: 360 }, { x: 40, y: 260 },
-  { x: 60, y: 120 }, { x: 140, y: 60 },
-];
-
-function NodeDot({ x, y, delay = 0 }: { x: number; y: number; delay?: number }) {
+function PosterArches() {
+  const arches = [
+    { src: heroGpu, alt: "GPU cluster", h: "h-[280px] sm:h-[340px]", mt: "mt-16", tag: "H100 · SXM" },
+    { src: heroDatacenter, alt: "AI data center", h: "h-[360px] sm:h-[440px]", mt: "mt-0", tag: "us-east · live", featured: true },
+    { src: heroNetwork, alt: "Neural network fabric", h: "h-[280px] sm:h-[340px]", mt: "mt-16", tag: "NVLink · 900GB/s" },
+  ];
   return (
-    <g>
-      <motion.circle
-        cx={x} cy={y} r="14"
-        fill="rgba(156,176,128,0.12)"
-        animate={{ r: [12, 18, 12], opacity: [0.6, 0.2, 0.6] }}
-        transition={{ duration: 3, repeat: Infinity, delay, ease: "easeInOut" }}
-      />
-      <circle cx={x} cy={y} r="6" fill="#34434A" stroke="#9CB080" strokeWidth="1.2" />
-      <circle cx={x} cy={y} r="2" fill="#9CB080" />
-    </g>
+    <div className="relative">
+      {/* subtle backdrop */}
+      <div className="absolute inset-0 -z-10 rounded-[3rem] bg-gradient-to-br from-white/60 via-transparent to-[#60A5FA]/10 blur-2xl" />
+
+      <div className="grid grid-cols-3 gap-3 sm:gap-5">
+        {arches.map((a, i) => (
+          <motion.div
+            key={a.alt}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: "easeOut" }}
+            className={`arch-frame relative ${a.h} ${a.mt}`}
+          >
+            <img
+              src={a.src}
+              alt={a.alt}
+              width={768}
+              height={1024}
+              className="h-full w-full object-cover"
+              loading={a.featured ? "eager" : "lazy"}
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060F2E]/70 via-transparent to-transparent" />
+            {a.featured && (
+              <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 backdrop-blur">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                <span className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]">
+                  {a.tag}
+                </span>
+              </div>
+            )}
+            <div className="absolute inset-x-2 bottom-2 rounded-lg bg-white/85 px-2.5 py-1.5 backdrop-blur">
+              <div className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]/60">
+                {a.alt}
+              </div>
+              <div className="font-display text-[11px] font-semibold text-[#0B1E4F]">{a.tag}</div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* floating stat card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.7, duration: 0.6 }}
+        className="absolute -bottom-6 left-2 rounded-2xl border border-[#0B1E4F]/10 bg-white/95 p-3 shadow-[0_20px_50px_-20px_rgba(11,30,79,0.4)] backdrop-blur"
+      >
+        <div className="flex items-center gap-3">
+          <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#0B1E4F] text-white">
+            <Cpu className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]/60">Cluster util</div>
+            <div className="font-display text-sm font-bold text-[#0B1E4F]">87.4% · 128 nodes</div>
+          </div>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.85, duration: 0.6 }}
+        className="absolute -right-2 top-4 rounded-2xl border border-[#0B1E4F]/10 bg-white/95 p-3 shadow-[0_20px_50px_-20px_rgba(11,30,79,0.4)] backdrop-blur"
+      >
+        <div className="flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-[#2563EB]" />
+          <div className="font-mono text-[10px] uppercase tracking-widest text-[#0B1E4F]">4.2ms P99</div>
+        </div>
+      </motion.div>
+    </div>
   );
 }
+
 
 /* ---------- Ecosystem ---------- */
 
