@@ -1,33 +1,56 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useInView, useMotionValue, useSpring, useTransform, useScroll } from "motion/react";
+import { motion, useInView, useScroll, useTransform, animate } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
-  Cpu, Network, Layers, Gauge, Cloud, Shield, ArrowRight, Boxes, Zap,
-  GitBranch, LineChart, Activity, Server, Sparkles, CheckCircle2, XCircle,
-  Workflow, Database, Rocket, ChevronRight, Phone, Play,
+  Rocket,
+  Cpu,
+  GitBranch,
+  Gauge,
+  Activity,
+  Cloud,
+  ShieldCheck,
+  BarChart3,
+  Layers,
+  Boxes,
+  Workflow,
+  LineChart,
+  Plus,
+  ArrowRight,
+  Check,
+  Github,
+  Linkedin,
+  Twitter,
+  Menu,
+  X,
+  Zap,
+  Server,
+  Radar,
+  ChevronRight,
 } from "lucide-react";
-import heroGpu from "@/assets/hero-gpu.jpg";
-import heroDatacenter from "@/assets/hero-datacenter.jpg";
-import heroNetwork from "@/assets/hero-network.jpg";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-/* ---------- Reusable Motion Primitives ---------- */
-
+/* ---------- Motion helpers ---------- */
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" as const } },
-} as const;
+  hidden: { opacity: 0, y: 50 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+};
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.05 } },
+};
 
-function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; delay?: number; className?: string }) {
+function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
     <motion.div
-      variants={fadeUp}
+      ref={ref}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
+      animate={inView ? "show" : "hidden"}
+      variants={fadeUp}
       transition={{ delay }}
       className={className}
     >
@@ -36,13 +59,15 @@ function Reveal({ children, delay = 0, className = "" }: { children: ReactNode; 
   );
 }
 
-function Stagger({ children, className = "" }: { children: ReactNode; className?: string }) {
+function Stagger({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={{ show: { transition: { staggerChildren: 0.08 } } }}
+      animate={inView ? "show" : "hidden"}
+      variants={stagger}
       className={className}
     >
       {children}
@@ -50,536 +75,359 @@ function Stagger({ children, className = "" }: { children: ReactNode; className?
   );
 }
 
-/* ---------- Nav ---------- */
+function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: string; duration?: number }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    const controls = animate(0, to, {
+      duration,
+      ease: "easeOut",
+      onUpdate: (v) => setVal(v),
+    });
+    return () => controls.stop();
+  }, [inView, to, duration]);
+  const display =
+    to >= 100 ? Math.round(val).toLocaleString() : val.toFixed(to % 1 === 0 ? 0 : 2);
+  return (
+    <span ref={ref}>
+      {display}
+      {suffix}
+    </span>
+  );
+}
 
+/* ---------- Nav ---------- */
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [overLight, setOverLight] = useState(true);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 12);
-      setOverLight(window.scrollY < window.innerHeight - 120);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const links = [
-    ["Platform", "#platform"],
-    ["Architecture", "#architecture"],
-    ["Infrastructure", "#infrastructure"],
-    ["How it works", "#how"],
-    ["Industries", "#industries"],
+    { href: "#home", label: "Home" },
+    { href: "#about", label: "About" },
+    { href: "#how", label: "How It Works" },
+    { href: "#features", label: "Features" },
+    { href: "#pricing", label: "Pricing" },
+    { href: "#faq", label: "FAQ" },
+    { href: "#contact", label: "Contact" },
   ];
 
-  const shell = scrolled
-    ? overLight
-      ? "backdrop-blur-xl bg-[#F7F5EF]/85 border-b border-[#0B1E4F]/10"
-      : "backdrop-blur-xl bg-[#060F2E]/80 border-b border-white/10"
-    : "bg-transparent";
-  const linkColor = overLight ? "text-[#0B1E4F]/70 hover:text-[#0B1E4F]" : "text-[#EAF2FF]/75 hover:text-white";
-  const brandColor = overLight ? "text-[#0B1E4F]" : "text-white";
-
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${shell}`}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-        <a href="#top" className={`flex items-center gap-2 ${brandColor}`}>
-          <LogoMark dark={overLight} />
-          <span className="font-display text-lg font-bold tracking-tight">VertexGrid</span>
-          <span className="font-mono text-[10px] opacity-60">.one</span>
-        </a>
-        <nav className="hidden items-center gap-8 md:flex">
-          {links.map(([label, href]) => (
-            <a key={href} href={href} className={`text-sm transition-colors ${linkColor}`}>
-              {label}
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-[rgba(245,243,239,0.92)] backdrop-blur-md shadow-[0_1px_0_0_rgba(17,17,17,0.06)]"
+          : "bg-[rgba(245,243,239,0.6)] backdrop-blur-md"
+      }`}
+    >
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <a href="#home" className="flex items-center gap-2 group">
+            <span className="grid h-8 w-8 place-items-center rounded-lg bg-forest text-lime">
+              <Radar className="h-4 w-4" strokeWidth={2.4} />
+            </span>
+            <span className="font-display text-[17px] font-bold tracking-tight text-ink">
+              OriginSearch<span className="text-ink-2/80 font-medium">.one</span>
+            </span>
+          </a>
+          <nav className="hidden lg:flex items-center gap-1">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                className="relative px-3 py-2 text-sm font-medium text-ink/80 hover:text-ink transition-colors after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-[2px] after:bg-lime after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+          <div className="flex items-center gap-2">
+            <a
+              href="#contact"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full bg-lime px-4 py-2 text-sm font-semibold text-forest transition-transform hover:scale-105 active:scale-100 shadow-[0_10px_30px_-10px_rgba(198,241,53,0.6)]"
+            >
+              Get Started <ArrowRight className="h-4 w-4" />
             </a>
-          ))}
-        </nav>
-        <div className="flex items-center gap-3">
-          <a href="#contact" className={`hidden text-sm transition-colors sm:inline ${linkColor}`}>
-            Contact Sales
-          </a>
-          <a
-            href="#demo"
-            className={`group inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all ${
-              overLight
-                ? "bg-[#0B1E4F] text-white hover:bg-[#14286B]"
-                : "bg-primary text-primary-foreground hover:shadow-[0_0_30px_var(--color-glow)]"
-            }`}
-          >
-            Request Demo
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-          </a>
+            <button
+              className="lg:hidden grid h-10 w-10 place-items-center rounded-lg border border-hairline text-ink"
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Toggle menu"
+            >
+              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
+        {open && (
+          <div className="lg:hidden pb-4 grid gap-1">
+            {links.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className="rounded-md px-3 py-2 text-sm font-medium text-ink hover:bg-muted"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href="#contact"
+              onClick={() => setOpen(false)}
+              className="mt-1 rounded-full bg-lime px-4 py-2 text-center text-sm font-semibold text-forest"
+            >
+              Get Started
+            </a>
+          </div>
+        )}
       </div>
     </header>
   );
 }
 
-function LogoMark({ dark = false }: { dark?: boolean }) {
+/* ---------- Cursor glow (desktop) ---------- */
+function CursorGlow() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+    const onMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+      ref.current.style.transform = `translate(${e.clientX - 200}px, ${e.clientY - 200}px)`;
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
   return (
     <div
-      className={`relative grid h-8 w-8 place-items-center rounded-lg ring-hairline ${
-        dark ? "bg-gradient-to-br from-[#0B1E4F] to-[#1E3A8A]" : "bg-gradient-to-br from-primary to-accent"
-      }`}
-    >
-      <svg viewBox="0 0 24 24" className="h-4 w-4 text-white">
-        <path d="M12 2l9 5-9 5-9-5 9-5zm0 8l9 5-9 5-9-5 9-5z" fill="currentColor" opacity=".95" />
-      </svg>
-    </div>
-  );
-}
-
-/* ---------- Hero (light "poster" section) ---------- */
-
-function Hero() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 80]);
-
-  return (
-    <section
-      id="top"
       ref={ref}
-      className="relative flex min-h-screen items-center overflow-hidden bg-paper pt-28 pb-20 text-[#0B1E4F]"
-    >
-      {/* decorative shapes */}
-      <div className="pointer-events-none absolute inset-0 ink-dotgrid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
-      <PosterShapes />
-
-      <motion.div style={{ y }} className="relative z-10 mx-auto grid w-full max-w-7xl gap-14 px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center">
-        {/* Left: copy */}
-        <div className="order-2 lg:order-1">
-          <Reveal>
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#0B1E4F]/15 bg-white/70 px-3 py-1 backdrop-blur">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#2563EB]" />
-              <span className="font-mono text-[11px] uppercase tracking-wider text-[#0B1E4F]/70">
-                Enterprise AI Compute · v2026.1
-              </span>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.05}>
-            <h1 className="mt-6 font-display text-[3rem] font-black leading-[0.95] tracking-tight sm:text-6xl lg:text-[5.5rem]">
-              <span className="block font-serif text-3xl italic font-medium text-[#1E3A8A] sm:text-4xl lg:text-5xl">
-                Powering
-              </span>
-              <span className="block text-gradient-ink">THE AI GRID</span>
-            </h1>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <div className="mt-6 inline-flex items-center gap-3 rounded-full border border-[#0B1E4F]/20 bg-white/60 px-5 py-2 backdrop-blur">
-              <span className="text-sm font-medium text-[#0B1E4F]">
-                Orchestrate GPUs. Train intelligence. Ship inference.
-              </span>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.18}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-[#0B1E4F]/70">
-              VertexGrid unifies GPU clusters, cloud regions and edge nodes behind a single
-              intelligent compute plane — built for the era of frontier AI.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.24}>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="#demo"
-                className="group inline-flex items-center gap-2 rounded-full bg-[#0B1E4F] px-6 py-3 text-sm font-semibold text-white shadow-[0_16px_40px_-15px_rgba(11,30,79,0.6)] transition-all hover:bg-[#14286B]"
-              >
-                Book a Demo
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </a>
-              <a
-                href="#platform"
-                className="group inline-flex items-center gap-2 rounded-full border border-[#0B1E4F]/25 bg-white/70 px-6 py-3 text-sm font-semibold text-[#0B1E4F] backdrop-blur transition-all hover:bg-white"
-              >
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-[#0B1E4F] text-white">
-                  <Play className="h-3 w-3 fill-white" />
-                </span>
-                Explore Platform
-              </a>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.32}>
-            <div className="mt-10 grid max-w-lg grid-cols-3 gap-6 border-t border-[#0B1E4F]/15 pt-6">
-              {[
-                ["50K+", "GPU cores"],
-                ["99.99%", "Availability"],
-                ["3.5×", "Faster training"],
-              ].map(([v, l]) => (
-                <div key={l}>
-                  <div className="font-display text-2xl font-bold text-[#0B1E4F]">{v}</div>
-                  <div className="mt-1 text-xs text-[#0B1E4F]/60">{l}</div>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.38}>
-            <div className="mt-8 flex flex-wrap items-center gap-6 text-xs text-[#0B1E4F]/60">
-              <span className="inline-flex items-center gap-2">
-                <Phone className="h-3.5 w-3.5" /> Talk to sales · +1 (415) 555-0140
-              </span>
-              <span className="inline-flex items-center gap-2">
-                <Shield className="h-3.5 w-3.5" /> SOC 2 · ISO 27001 · HIPAA
-              </span>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* Right: three arched image frames */}
-        <div className="relative order-1 lg:order-2">
-          <PosterArches />
-        </div>
-      </motion.div>
-
-      {/* wave divider into dark sections */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-24">
-        <svg viewBox="0 0 1440 100" preserveAspectRatio="none" className="h-full w-full">
-          <path d="M0 60 C240 110 480 20 720 50 C960 80 1200 30 1440 60 L1440 100 L0 100 Z" fill="#060F2E" />
-        </svg>
-      </div>
-    </section>
+      aria-hidden
+      className="pointer-events-none fixed left-0 top-0 z-[1] h-[400px] w-[400px] rounded-full opacity-40 mix-blend-screen"
+      style={{
+        background: "radial-gradient(closest-side, rgba(198,241,53,0.28), transparent 70%)",
+      }}
+    />
   );
 }
 
-function PosterShapes() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* sun burst top */}
-      <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#60A5FA]/25 via-[#22D3EE]/10 to-transparent blur-2xl" />
-      {/* dashed circle */}
-      <svg className="absolute -left-24 top-24 h-64 w-64 text-[#0B1E4F]/20" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 6" />
-        <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" strokeWidth="1" strokeDasharray="2 6" />
-      </svg>
-      {/* offer badge */}
-      <div className="absolute right-6 top-28 hidden h-24 w-24 rotate-6 items-center justify-center rounded-full border border-[#0B1E4F]/25 bg-white/80 text-center shadow-[0_16px_40px_-15px_rgba(11,30,79,0.4)] backdrop-blur md:flex">
-        <div>
-          <div className="font-mono text-[10px] uppercase tracking-widest text-[#0B1E4F]/60">GPU</div>
-          <div className="font-display text-lg font-bold text-[#0B1E4F]">H100</div>
-          <div className="font-mono text-[10px] text-[#2563EB]">READY</div>
-        </div>
-      </div>
-      {/* tiny sparkles */}
-      {[
-        [15, 60], [85, 20], [70, 78], [30, 85], [90, 55],
-      ].map(([x, y], i) => (
-        <motion.span
-          key={i}
-          className="absolute h-2 w-2 rounded-full bg-[#2563EB]"
-          style={{ left: `${x}%`, top: `${y}%` }}
-          animate={{ scale: [1, 1.6, 1], opacity: [0.3, 1, 0.3] }}
-          transition={{ duration: 3 + i * 0.4, repeat: Infinity }}
-        />
-      ))}
-      {/* soft blob bottom left */}
-      <div className="absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#60A5FA]/20 blur-3xl" />
-      <div className="absolute -bottom-32 right-10 h-80 w-80 rounded-full bg-[#22D3EE]/15 blur-3xl" />
-    </div>
-  );
-}
-
-function PosterArches() {
-  const arches = [
-    { src: heroGpu, alt: "GPU cluster", h: "h-[280px] sm:h-[340px]", mt: "mt-16", tag: "H100 · SXM" },
-    { src: heroDatacenter, alt: "AI data center", h: "h-[360px] sm:h-[440px]", mt: "mt-0", tag: "us-east · live", featured: true },
-    { src: heroNetwork, alt: "Neural network fabric", h: "h-[280px] sm:h-[340px]", mt: "mt-16", tag: "NVLink · 900GB/s" },
+/* ---------- Hero deployment flow viz ---------- */
+function DeploymentFlow() {
+  const nodes = [
+    { label: "AI Models", icon: Boxes },
+    { label: "Deployment Engine", icon: Rocket },
+    { label: "Inference Router", icon: Workflow },
+    { label: "Auto Scaling Layer", icon: Gauge },
+    { label: "Production Infra", icon: Server },
   ];
   return (
-    <div className="relative">
-      {/* subtle backdrop */}
-      <div className="absolute inset-0 -z-10 rounded-[3rem] bg-gradient-to-br from-white/60 via-transparent to-[#60A5FA]/10 blur-2xl" />
-
-      <div className="grid grid-cols-3 gap-3 sm:gap-5">
-        {arches.map((a, i) => (
+    <div className="relative w-full">
+      {/* soft glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-lime/10 blur-3xl" />
+      </div>
+      <div className="grid gap-3">
+        {nodes.map((n, i) => (
           <motion.div
-            key={a.alt}
-            initial={{ opacity: 0, y: 40 }}
+            key={n.label}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.15 + i * 0.12, ease: "easeOut" }}
-            className={`arch-frame relative ${a.h} ${a.mt}`}
+            transition={{ delay: 0.4 + i * 0.12, duration: 0.6, ease: "easeOut" }}
+            className="relative"
           >
-            <img
-              src={a.src}
-              alt={a.alt}
-              width={768}
-              height={1024}
-              className="h-full w-full object-cover"
-              loading={a.featured ? "eager" : "lazy"}
-            />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#060F2E]/70 via-transparent to-transparent" />
-            {a.featured && (
-              <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1 backdrop-blur">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
-                <span className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]">
-                  {a.tag}
-                </span>
+            <div className="flex items-center gap-4 rounded-2xl border border-lime/15 bg-forest-2/70 backdrop-blur px-5 py-4 shadow-[0_12px_40px_-20px_rgba(0,0,0,0.6)]">
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-lime/12 text-lime ring-1 ring-lime/25">
+                <n.icon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="font-display font-semibold text-paper">{n.label}</div>
+                <div className="text-xs text-paper/60 font-mono">
+                  {["queued", "provisioning", "routing", "scaling", "live"][i]} · node-{i + 1}
+                </div>
+              </div>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-lime opacity-70 animate-ping" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-lime" />
+              </span>
+            </div>
+            {i < nodes.length - 1 && (
+              <div className="relative mx-auto h-6 w-px overflow-hidden bg-lime/20">
+                <motion.span
+                  className="absolute left-1/2 top-0 h-3 w-[3px] -translate-x-1/2 bg-lime"
+                  animate={{ y: [-12, 28] }}
+                  transition={{ duration: 1.4, repeat: Infinity, delay: i * 0.2, ease: "easeIn" }}
+                  style={{ boxShadow: "0 0 12px rgba(198,241,53,0.9)" }}
+                />
               </div>
             )}
-            <div className="absolute inset-x-2 bottom-2 rounded-lg bg-white/85 px-2.5 py-1.5 backdrop-blur">
-              <div className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]/60">
-                {a.alt}
-              </div>
-              <div className="font-display text-[11px] font-semibold text-[#0B1E4F]">{a.tag}</div>
-            </div>
           </motion.div>
         ))}
       </div>
-
-      {/* floating stat card */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.7, duration: 0.6 }}
-        className="absolute -bottom-6 left-2 rounded-2xl border border-[#0B1E4F]/10 bg-white/95 p-3 shadow-[0_20px_50px_-20px_rgba(11,30,79,0.4)] backdrop-blur"
-      >
-        <div className="flex items-center gap-3">
-          <div className="grid h-9 w-9 place-items-center rounded-xl bg-[#0B1E4F] text-white">
-            <Cpu className="h-4 w-4" />
-          </div>
-          <div>
-            <div className="font-mono text-[9px] uppercase tracking-widest text-[#0B1E4F]/60">Cluster util</div>
-            <div className="font-display text-sm font-bold text-[#0B1E4F]">87.4% · 128 nodes</div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.85, duration: 0.6 }}
-        className="absolute -right-2 top-4 rounded-2xl border border-[#0B1E4F]/10 bg-white/95 p-3 shadow-[0_20px_50px_-20px_rgba(11,30,79,0.4)] backdrop-blur"
-      >
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-[#2563EB]" />
-          <div className="font-mono text-[10px] uppercase tracking-widest text-[#0B1E4F]">4.2ms P99</div>
-        </div>
-      </motion.div>
     </div>
   );
 }
 
+/* ---------- Hero ---------- */
+function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
-/* ---------- Ecosystem ---------- */
-
-function Ecosystem() {
-  const items = ["NVIDIA", "AWS", "Azure", "Google Cloud", "Kubernetes", "Docker", "PyTorch", "TensorFlow", "Hugging Face"];
-  return (
-    <section className="relative border-y border-border py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <Reveal>
-          <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-            Trusted infrastructure ecosystem
-          </p>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <h2 className="mx-auto mt-3 max-w-3xl text-center text-2xl font-semibold sm:text-3xl">
-            Interoperable with the stack you already run
-          </h2>
-        </Reveal>
-
-        <div className="relative mt-14">
-          <div className="pointer-events-none absolute inset-x-0 top-1/2 -z-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-          <Stagger className="grid grid-cols-3 gap-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-9">
-            {items.map((name) => (
-              <motion.div
-                key={name}
-                variants={fadeUp}
-                whileHover={{ y: -3 }}
-                className="group relative flex items-center justify-center rounded-xl border border-border bg-surface/50 px-3 py-5 backdrop-blur transition-all hover:border-primary/40 hover:bg-surface-elevated"
-              >
-                <span className="text-center text-xs font-medium text-muted-foreground transition-colors group-hover:text-foreground">
-                  {name}
-                </span>
-                <span className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100" style={{ boxShadow: "0 0 30px var(--color-glow)" }} />
-              </motion.div>
-            ))}
-          </Stagger>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Architecture ---------- */
-
-function Architecture() {
-  const steps = [
-    { icon: Layers, title: "AI Workloads", desc: "Ingest training jobs, batch inference, and real-time pipelines from any framework." },
-    { icon: Workflow, title: "Compute Orchestration", desc: "Intent-based scheduler places workloads across regions with policy guardrails." },
-    { icon: Cpu, title: "GPU Scheduling", desc: "Bin-pack, MIG, and topology-aware placement to maximize accelerator utilization." },
-    { icon: GitBranch, title: "Distributed Training", desc: "Elastic multi-node fabrics with NCCL/RDMA autotuning and checkpoint resilience." },
-    { icon: Zap, title: "Inference Scaling", desc: "Low-latency serving with autoscaling, batching, and speculative decoding." },
-    { icon: Rocket, title: "Enterprise Deployment", desc: "SOC2-ready deploys with SSO, RBAC, VPC peering, and audit trails." },
+  const stats = [
+    { value: 99.99, suffix: "%", label: "Uptime SLA" },
+    { value: 10, suffix: "M+", label: "Inference Requests" },
+    { value: 500, suffix: "+", label: "Deployments" },
+    { value: 30, suffix: "+", label: "Global Regions" },
   ];
+
   return (
-    <section id="architecture" className="relative py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+    <section
+      ref={ref}
+      id="home"
+      className="relative overflow-hidden bg-forest text-paper pt-32 pb-24 sm:pt-40 sm:pb-32"
+    >
+      <div className="absolute inset-0 bg-grid-dark opacity-70" />
+      <div className="absolute inset-0 bg-[radial-gradient(60%_50%_at_50%_0%,rgba(198,241,53,0.14),transparent_70%)]" />
+      <motion.div style={{ y }} className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="grid gap-14 lg:grid-cols-[1.15fr_1fr] lg:items-center">
           <div>
-            <Reveal>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Compute Architecture</p>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-                Intelligent Compute <span className="text-gradient">Orchestration</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-5 max-w-lg text-muted-foreground">
-                A single control plane routes AI workloads through an intelligent stack — from
-                workload intent to GPU placement, distributed training, and production inference.
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 rounded-full border border-lime/25 bg-lime/8 px-3 py-1 text-xs font-mono uppercase tracking-widest text-lime"
+            >
+              <Zap className="h-3.5 w-3.5" /> AI Deployment · v4 Runtime
+            </motion.span>
+
+            <motion.h1
+              variants={stagger}
+              initial="hidden"
+              animate="show"
+              className="mt-6 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.05] tracking-tight"
+            >
+              {["The AI ", "Deployment ", "Platform ", "for ", "Scalable ", "Production ", "Intelligence"].map(
+                (w, i) => (
+                  <motion.span
+                    key={i}
+                    variants={fadeUp}
+                    className={
+                      /Deployment|Scalable|Production/.test(w) ? "text-lime" : "text-paper"
+                    }
+                  >
+                    {w}
+                  </motion.span>
+                ),
+              )}
+            </motion.h1>
+
+            <Reveal delay={0.2}>
+              <p className="mt-6 max-w-xl text-lg text-paper/70 leading-relaxed">
+                Deploy, orchestrate, monitor, and scale AI models across cloud, edge, and hybrid
+                environments with enterprise-grade automation.
               </p>
             </Reveal>
-            <Stagger className="mt-8 space-y-4">
-              {steps.map((s, i) => (
-                <motion.div
-                  key={s.title}
-                  variants={fadeUp}
-                  className="group flex items-start gap-4 rounded-2xl border border-border bg-surface/50 p-4 backdrop-blur transition-all hover:border-primary/40"
+
+            <Reveal delay={0.3}>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href="#contact"
+                  className="inline-flex items-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-semibold text-forest transition-transform hover:scale-105 active:scale-100 shadow-[0_20px_50px_-16px_rgba(198,241,53,0.6)]"
                 >
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-accent/50 ring-hairline">
-                    <s.icon className="h-4.5 w-4.5 text-primary" strokeWidth={1.6} />
+                  Start Deploying <ArrowRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#features"
+                  className="inline-flex items-center gap-2 rounded-full border border-paper/25 px-6 py-3.5 text-sm font-semibold text-paper hover:bg-paper/5 transition-colors"
+                >
+                  Explore Platform
+                </a>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.4}>
+              <dl className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-paper/10 pt-8">
+                {stats.map((s) => (
+                  <div key={s.label}>
+                    <dt className="font-display text-3xl sm:text-4xl font-bold text-paper">
+                      <Counter to={s.value} suffix={s.suffix} />
+                    </dt>
+                    <dd className="mt-1 text-xs font-mono uppercase tracking-wider text-paper/60">
+                      {s.label}
+                    </dd>
                   </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] text-muted-foreground">0{i + 1}</span>
-                      <h3 className="text-sm font-semibold">{s.title}</h3>
-                    </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{s.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </Stagger>
+                ))}
+              </dl>
+            </Reveal>
           </div>
 
-          <Reveal delay={0.1}>
-            <ArchitectureDiagram />
-          </Reveal>
+          <div className="relative">
+            <DeploymentFlow />
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
 
-function ArchitectureDiagram() {
-  const layers = [
-    { label: "AI Workloads", tag: "input", icon: Layers },
-    { label: "Compute Orchestration", tag: "control", icon: Workflow },
-    { label: "GPU Scheduling", tag: "runtime", icon: Cpu },
-    { label: "Distributed Training", tag: "fabric", icon: GitBranch },
-    { label: "Inference Scaling", tag: "serving", icon: Zap },
-    { label: "Enterprise Deployment", tag: "delivery", icon: Rocket },
+/* ---------- About ---------- */
+function About() {
+  const cards = [
+    {
+      icon: Rocket,
+      title: "AI Deployment",
+      desc: "Ship models to production with a single command and zero-downtime rollouts.",
+    },
+    {
+      icon: Cpu,
+      title: "Infrastructure Automation",
+      desc: "Provision GPUs, networks, and storage automatically across any cloud.",
+    },
+    {
+      icon: GitBranch,
+      title: "Lifecycle Management",
+      desc: "Version, promote, and roll back models with full lineage and audit trails.",
+    },
+    {
+      icon: Activity,
+      title: "Enterprise Monitoring",
+      desc: "Deep observability across latency, throughput, drift, and cost — in real time.",
+    },
   ];
   return (
-    <div className="relative">
-      <div className="absolute -inset-8 -z-10 rounded-[2rem] bg-radial-glow" />
-      <div className="rounded-3xl border border-border bg-surface/40 p-6 backdrop-blur-xl ring-hairline">
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">architecture.flow</span>
-          <span className="font-mono text-[10px] text-primary">● active</span>
-        </div>
-        <div className="mt-4 space-y-2">
-          {layers.map((l, i) => (
+    <section id="about" className="relative py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="max-w-3xl">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-2">
+            / About OriginSearch
+          </span>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink">
+            Built for Modern <span className="text-forest">AI Operations</span>
+          </h2>
+          <p className="mt-5 text-lg text-ink-2 leading-relaxed">
+            OriginSearch simplifies the journey from AI development to production deployment.
+            Automate infrastructure provisioning, model versioning, deployment orchestration,
+            runtime monitoring, and scaling through a unified platform.
+          </p>
+        </Reveal>
+
+        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {cards.map((c) => (
             <motion.div
-              key={l.label}
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="relative"
-            >
-              <div className="flex items-center gap-3 rounded-xl border border-border bg-background/40 px-4 py-3">
-                <div className="grid h-8 w-8 place-items-center rounded-lg bg-accent/60">
-                  <l.icon className="h-4 w-4 text-primary" strokeWidth={1.7} />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-semibold">{l.label}</div>
-                  <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{l.tag}</div>
-                </div>
-                <motion.div
-                  className="h-1.5 w-1.5 rounded-full bg-primary"
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
-                />
-              </div>
-              {i < layers.length - 1 && (
-                <div className="relative ml-8 h-4">
-                  <div className="absolute left-0 top-0 h-full w-px bg-gradient-to-b from-primary/60 to-transparent" />
-                  <motion.div
-                    className="absolute left-[-2px] top-0 h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-glow)]"
-                    animate={{ y: [0, 12, 0], opacity: [0, 1, 0] }}
-                    transition={{ duration: 1.8, repeat: Infinity, delay: i * 0.3 }}
-                  />
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Capabilities ---------- */
-
-function Capabilities() {
-  const features = [
-    { icon: Cpu, title: "GPU Orchestration", desc: "Topology-aware placement across NVLink, InfiniBand and RoCE fabrics with MIG partitioning." },
-    { icon: GitBranch, title: "Distributed Training", desc: "Elastic multi-node training with fault-tolerant checkpoints and gradient sync tuning." },
-    { icon: Zap, title: "Inference Acceleration", desc: "Continuous batching, KV-cache reuse and quantized serving for high-throughput endpoints." },
-    { icon: Gauge, title: "Resource Optimization", desc: "Bin-packing, spot arbitrage and workload-aware autoscaling that cut compute spend up to 70%." },
-    { icon: Cloud, title: "Hybrid Cloud Compute", desc: "Unify on-prem clusters, hyperscalers and edge sites behind a single scheduling plane." },
-    { icon: Shield, title: "Enterprise-Scale Infra", desc: "SSO, RBAC, VPC peering, audit logging and SOC2-aligned controls out of the box." },
-  ];
-  return (
-    <section id="platform" className="relative py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Core Platform</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              Everything AI infrastructure teams need
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-4 text-muted-foreground">
-              Six capabilities, one production-grade compute plane — designed for teams running
-              serious AI at scale.
-            </p>
-          </Reveal>
-        </div>
-
-        <Stagger className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <motion.div
-              key={f.title}
+              key={c.title}
               variants={fadeUp}
-              whileHover={{ y: -4 }}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur transition-all hover:border-primary/40"
+              whileHover={{ y: -8 }}
+              className="group relative rounded-2xl border border-hairline bg-card p-6 transition-shadow hover:shadow-[0_20px_50px_-24px_rgba(17,17,17,0.25)] hover:border-lime"
             >
-              <div
-                className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{ background: "radial-gradient(circle, var(--color-glow), transparent 70%)" }}
-              />
-              <div className="relative">
-                <div className="grid h-11 w-11 place-items-center rounded-xl bg-accent/60 ring-hairline">
-                  <f.icon className="h-5 w-5 text-primary" strokeWidth={1.6} />
-                </div>
-                <h3 className="mt-5 text-lg font-semibold">{f.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
-                <div className="mt-6 flex items-center gap-1.5 text-xs font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-                  Learn more <ChevronRight className="h-3.5 w-3.5" />
-                </div>
-              </div>
+              <span className="grid h-11 w-11 place-items-center rounded-xl bg-forest text-lime group-hover:animate-pulse">
+                <c.icon className="h-5 w-5" />
+              </span>
+              <h3 className="mt-5 font-display text-lg font-semibold text-ink">{c.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink-2">{c.desc}</p>
+              <ChevronRight className="absolute right-5 top-6 h-4 w-4 text-ink-2/40 transition-transform group-hover:translate-x-1 group-hover:text-forest" />
             </motion.div>
           ))}
         </Stagger>
@@ -588,312 +436,85 @@ function Capabilities() {
   );
 }
 
-/* ---------- Infrastructure viz ---------- */
-
-function InfrastructureViz() {
-  return (
-    <section id="infrastructure" className="relative overflow-hidden py-28">
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-30 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_70%)]" />
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Global Infrastructure</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              One network. <span className="text-gradient">Every accelerator.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-4 text-muted-foreground">
-              GPU clusters, cloud regions, edge nodes and data pipelines — connected through an
-              intelligent, latency-aware topology.
-            </p>
-          </Reveal>
-        </div>
-
-        <Reveal delay={0.15}>
-          <div className="relative mx-auto mt-16 max-w-5xl">
-            <NetworkTopology />
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function NetworkTopology() {
-  const nodes = [
-    { x: 100, y: 120, label: "GPU · US-East", type: "gpu" },
-    { x: 260, y: 60, label: "Edge · NYC", type: "edge" },
-    { x: 440, y: 100, label: "Cloud · AWS", type: "cloud" },
-    { x: 620, y: 60, label: "Edge · LON", type: "edge" },
-    { x: 780, y: 130, label: "GPU · EU-West", type: "gpu" },
-    { x: 160, y: 300, label: "Data · S3", type: "data" },
-    { x: 360, y: 360, label: "Pipeline · Kafka", type: "pipe" },
-    { x: 560, y: 360, label: "Cloud · GCP", type: "cloud" },
-    { x: 740, y: 300, label: "Data · Lakehouse", type: "data" },
-  ];
-  const center = { x: 440, y: 230 };
-
-  return (
-    <div className="relative rounded-3xl border border-border bg-surface/40 p-6 backdrop-blur-xl ring-hairline">
-      <svg viewBox="0 0 880 440" className="w-full">
-        <defs>
-          <linearGradient id="nl" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#9CB080" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#618764" stopOpacity="0.2" />
-          </linearGradient>
-          <radialGradient id="ng" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#9CB080" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#9CB080" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx={center.x} cy={center.y} r="160" fill="url(#ng)" />
-
-        {nodes.map((n, i) => (
-          <motion.line
-            key={`ln${i}`}
-            x1={center.x} y1={center.y} x2={n.x} y2={n.y}
-            stroke="url(#nl)" strokeWidth="1"
-            initial={{ pathLength: 0, opacity: 0 }}
-            whileInView={{ pathLength: 1, opacity: 0.7 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, delay: i * 0.06 }}
-          />
-        ))}
-
-        {nodes.map((n, i) => (
-          <motion.circle
-            key={`pk${i}`}
-            r="2.5" fill="#F5F7F6"
-            animate={{ cx: [center.x, n.x], cy: [center.y, n.y], opacity: [0, 1, 0] }}
-            transition={{ duration: 3, repeat: Infinity, delay: i * 0.3, ease: "easeInOut" }}
-          />
-        ))}
-
-        {/* central hub */}
-        <g>
-          <motion.circle
-            cx={center.x} cy={center.y} r="40" fill="rgba(43,87,72,0.5)"
-            animate={{ r: [38, 44, 38] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <circle cx={center.x} cy={center.y} r="22" fill="#2B5748" stroke="#9CB080" strokeWidth="1.5" />
-          <text x={center.x} y={center.y + 4} textAnchor="middle" className="fill-[#F5F7F6]" style={{ font: "600 10px 'JetBrains Mono'" }}>
-            CORE
-          </text>
-        </g>
-
-        {nodes.map((n, i) => (
-          <g key={i}>
-            <motion.circle
-              cx={n.x} cy={n.y} r="18"
-              fill="rgba(156,176,128,0.08)"
-              animate={{ r: [16, 20, 16] }}
-              transition={{ duration: 3, repeat: Infinity, delay: i * 0.2 }}
-            />
-            <circle cx={n.x} cy={n.y} r="9" fill="#34434A" stroke="#9CB080" strokeWidth="1.2" />
-            <text x={n.x} y={n.y - 22} textAnchor="middle" className="fill-[#A9B4B0]" style={{ font: "500 10px Inter" }}>
-              {n.label}
-            </text>
-          </g>
-        ))}
-      </svg>
-
-      <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4 sm:grid-cols-4">
-        {([
-          [Server, "128 clusters"],
-          [Cpu, "52,340 GPUs"],
-          [Cloud, "24 regions"],
-          [Activity, "1.2 Tbps fabric"],
-        ] as const).map(([Icon, label], i) => (
-          <div key={i} className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Icon className="h-4 w-4 text-primary" strokeWidth={1.6} />
-            <span className="font-mono">{label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ---------- Metrics ---------- */
-
-function useCounter(target: number, inView: boolean, duration = 1.8) {
-  const mv = useMotionValue(0);
-  const spring = useSpring(mv, { duration: duration * 1000, bounce: 0 });
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (inView) mv.set(target);
-    const unsub = spring.on("change", (v) => setVal(v));
-    return () => unsub();
-  }, [inView, target, mv, spring]);
-  return val;
-}
-
-function Metric({ value, suffix, prefix, label, decimals = 0 }: { value: number; suffix?: string; prefix?: string; label: string; decimals?: number; }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  const v = useCounter(value, inView);
-  const formatted = decimals > 0 ? v.toFixed(decimals) : Math.round(v).toLocaleString();
-  return (
-    <div ref={ref} className="text-center">
-      <div className="font-display text-5xl font-bold tracking-tight sm:text-6xl">
-        <span className="text-gradient">{prefix}{formatted}{suffix}</span>
-      </div>
-      <div className="mt-3 text-sm text-muted-foreground">{label}</div>
-    </div>
-  );
-}
-
-function Metrics() {
-  return (
-    <section className="relative border-y border-border py-24">
-      <div className="mx-auto max-w-7xl px-6">
-        <Reveal>
-          <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Performance Metrics</p>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <h2 className="mx-auto mt-3 max-w-2xl text-center font-display text-3xl font-bold sm:text-4xl">
-            Measured across production AI workloads
-          </h2>
-        </Reveal>
-        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-          <Metric value={99.99} suffix="%" decimals={2} label="Infrastructure availability" />
-          <Metric value={3.5} suffix="×" decimals={1} label="Faster model training" />
-          <Metric value={70} suffix="%" label="Compute cost optimization" />
-          <Metric value={50000} suffix="+" label="GPU cores managed" />
-          <Metric value={5} suffix="M+" label="AI inference requests / day" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- How it works ---------- */
-
+/* ---------- How It Works ---------- */
 function HowItWorks() {
   const steps = [
-    { n: "01", title: "Connect Infrastructure", desc: "Attach clusters, clouds, and edge sites in minutes.", icon: Network },
-    { n: "02", title: "Orchestrate Resources", desc: "Policies map workloads to the right accelerators.", icon: Workflow },
-    { n: "03", title: "Train Models", desc: "Elastic distributed training with checkpoint resilience.", icon: GitBranch },
-    { n: "04", title: "Scale Inference", desc: "Autoscale endpoints with latency and cost targets.", icon: Zap },
-    { n: "05", title: "Monitor Performance", desc: "Real-time telemetry across every layer of the stack.", icon: LineChart },
+    {
+      icon: Cloud,
+      title: "Connect Infrastructure",
+      desc: "Link AWS, GCP, Azure, or on-prem clusters through a single control plane.",
+    },
+    {
+      icon: Rocket,
+      title: "Deploy Models",
+      desc: "Push containerized or framework-native models with automatic packaging.",
+    },
+    {
+      icon: LineChart,
+      title: "Monitor Performance",
+      desc: "Track latency, throughput, drift, and cost with real-time telemetry.",
+    },
+    {
+      icon: Gauge,
+      title: "Scale Automatically",
+      desc: "Elastic autoscaling responds to demand — up, down, or across regions.",
+    },
   ];
   return (
-    <section id="how" className="relative py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="max-w-2xl">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">How VertexGrid Works</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              From bare metal to production inference in five steps
-            </h2>
-          </Reveal>
-        </div>
+    <section id="how" className="relative py-24 sm:py-32 bg-muted/40">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="max-w-3xl">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-2">
+            / Workflow
+          </span>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink">
+            From Development to Production in <span className="text-forest">Four Steps</span>
+          </h2>
+        </Reveal>
 
-        <div className="relative mt-14">
-          <div className="absolute left-0 right-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block" />
-          <Stagger className="grid gap-6 lg:grid-cols-5">
-            {steps.map((s, i) => (
-              <motion.div key={s.n} variants={fadeUp} className="relative">
-                <div className="relative z-10 flex items-center gap-3">
-                  <div className="grid h-16 w-16 place-items-center rounded-2xl border border-border bg-surface/70 backdrop-blur">
-                    <s.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
-                  </div>
-                  <div className="font-mono text-3xl font-bold text-muted-foreground/60">{s.n}</div>
-                </div>
-                <h3 className="mt-5 text-lg font-semibold">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{s.desc}</p>
-                {i < steps.length - 1 && (
-                  <motion.div
-                    className="absolute left-16 top-8 hidden h-px bg-primary/40 lg:block"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "calc(100% - 4rem)" }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 + i * 0.1 }}
-                  />
-                )}
-              </motion.div>
-            ))}
-          </Stagger>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Modern AI Ops ---------- */
-
-function ModernOps() {
-  const items = [
-    { icon: GitBranch, title: "Distributed AI training", desc: "Multi-node, multi-region training with topology-aware collectives and fault tolerance." },
-    { icon: Gauge, title: "Intelligent workload balancing", desc: "Predictive placement that adapts to job shape, priority and cost envelope." },
-    { icon: Cpu, title: "GPU scheduling", desc: "MIG-aware, memory-aware bin-packing across heterogeneous accelerator pools." },
-    { icon: Cloud, title: "Multi-cloud orchestration", desc: "Move workloads between AWS, Azure, GCP and on-prem without rewrites." },
-    { icon: Boxes, title: "Infrastructure scalability", desc: "From 8 GPUs to 8,000 with linear operator overhead and self-healing clusters." },
-    { icon: Zap, title: "Production-grade inference", desc: "SLO-driven autoscaling, canary rollouts and continuous batching for LLM serving." },
-  ];
-  return (
-    <section className="relative py-28">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:items-start">
-          <div className="lg:sticky lg:top-28">
-            <Reveal>
-              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Built for Modern AI Operations</p>
-            </Reveal>
-            <Reveal delay={0.05}>
-              <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-                Engineered for the way AI is actually built
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-5 text-muted-foreground">
-                VertexGrid unifies the primitives that MLOps, platform and research teams reinvent
-                every quarter — into one dependable substrate.
-              </p>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <div className="mt-8 rounded-2xl border border-border bg-surface/40 p-5 backdrop-blur">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-primary" strokeWidth={1.6} />
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                    telemetry.snapshot
-                  </span>
-                </div>
-                <div className="mt-4 grid grid-cols-2 gap-4">
-                  {[
-                    ["p50 sched latency", "38ms"],
-                    ["job success rate", "99.7%"],
-                    ["mean GPU util", "84%"],
-                    ["spot recovery", "< 45s"],
-                  ].map(([k, v]) => (
-                    <div key={k}>
-                      <div className="font-mono text-[10px] uppercase text-muted-foreground">{k}</div>
-                      <div className="mt-1 font-mono text-lg font-semibold">{v}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
+        <div className="relative mt-16">
+          {/* Line - desktop */}
+          <div className="hidden lg:block absolute left-0 right-0 top-8 h-px bg-hairline overflow-hidden">
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.4, ease: "easeOut" }}
+              className="h-full origin-left bg-gradient-to-r from-forest via-lime to-forest"
+            />
+          </div>
+          {/* Line - mobile */}
+          <div className="lg:hidden absolute left-8 top-0 bottom-0 w-px bg-hairline overflow-hidden">
+            <motion.div
+              initial={{ scaleY: 0 }}
+              whileInView={{ scaleY: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1.6, ease: "easeOut" }}
+              className="h-full origin-top bg-gradient-to-b from-forest via-lime to-forest"
+            />
           </div>
 
-          <Stagger className="grid gap-4 sm:grid-cols-2">
-            {items.map((it) => (
+          <Stagger className="grid gap-8 lg:grid-cols-4">
+            {steps.map((s, i) => (
               <motion.div
-                key={it.title}
+                key={s.title}
                 variants={fadeUp}
-                className="group rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur transition-all hover:border-primary/40"
+                className="relative pl-20 lg:pl-0"
               >
-                <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent/60 ring-hairline">
-                  <it.icon className="h-5 w-5 text-primary" strokeWidth={1.6} />
+                <div className="lg:flex lg:justify-center">
+                  <span className="absolute left-0 top-0 lg:static grid h-16 w-16 place-items-center rounded-2xl bg-forest text-lime ring-8 ring-muted/40 shadow-[0_18px_40px_-18px_rgba(26,46,34,0.5)]">
+                    <s.icon className="h-6 w-6" />
+                  </span>
                 </div>
-                <h3 className="mt-5 font-semibold">{it.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{it.desc}</p>
+                <div className="lg:mt-6 lg:text-center">
+                  <div className="font-mono text-xs uppercase tracking-widest text-forest">
+                    Step {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <h3 className="mt-1 font-display text-xl font-semibold text-ink">{s.title}</h3>
+                  <p className="mt-2 text-sm text-ink-2 leading-relaxed lg:mx-auto lg:max-w-[240px]">
+                    {s.desc}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </Stagger>
@@ -903,53 +524,53 @@ function ModernOps() {
   );
 }
 
-/* ---------- Industries ---------- */
-
-function Industries() {
+/* ---------- Features ---------- */
+function Features() {
   const items = [
-    { title: "AI Research Labs", desc: "Reproducible, elastic experimentation at any scale.", icon: Sparkles },
-    { title: "Enterprise AI Teams", desc: "Governed platforms with per-team quotas and SSO.", icon: Shield },
-    { title: "SaaS AI Platforms", desc: "Multi-tenant inference with strict SLOs.", icon: Zap },
-    { title: "MLOps Organizations", desc: "Standardized training, serving and observability.", icon: Workflow },
-    { title: "Cloud Providers", desc: "Sell GPU capacity with orchestration built in.", icon: Cloud },
-    { title: "HPC Infrastructure", desc: "Batch scheduling for scientific and simulation workloads.", icon: Server },
+    { icon: Rocket, title: "AI Deployment Engine", desc: "One-click deploys with automatic packaging and rollback." },
+    { icon: Workflow, title: "Inference Orchestration", desc: "Intelligent routing across models, regions, and hardware." },
+    { icon: GitBranch, title: "Model Version Control", desc: "Full lineage, promotion pipelines, and safe rollbacks." },
+    { icon: Gauge, title: "Auto Scaling Infrastructure", desc: "Elastic capacity that tracks load in seconds, not minutes." },
+    { icon: Activity, title: "Runtime Monitoring", desc: "Latency, throughput, drift, and cost — in one console." },
+    { icon: Cloud, title: "Cloud & Edge Deployment", desc: "Ship the same model to AWS, GCP, Azure, or edge nodes." },
+    { icon: ShieldCheck, title: "Security & Compliance", desc: "SOC 2, ISO 27001, HIPAA-ready with private networking." },
+    { icon: BarChart3, title: "Deployment Analytics", desc: "Business KPIs mapped to model performance and spend." },
   ];
   return (
-    <section id="industries" className="relative py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="max-w-2xl">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Industries & Use Cases</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              Trusted across the AI infrastructure stack
-            </h2>
-          </Reveal>
-        </div>
+    <section id="features" className="relative overflow-hidden bg-forest text-paper py-24 sm:py-32">
+      <div className="absolute inset-0 bg-grid-dark opacity-60" />
+      <div className="absolute -top-40 left-1/2 h-[500px] w-[500px] -translate-x-1/2 rounded-full bg-lime/8 blur-3xl" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="max-w-3xl">
+          <span className="font-mono text-xs uppercase tracking-widest text-lime">
+            / Platform Capabilities
+          </span>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold">
+            Everything You Need to <span className="text-lime">Deploy AI at Scale</span>
+          </h2>
+          <p className="mt-5 text-lg text-paper/70">
+            A complete deployment fabric — from provisioning to production telemetry — engineered
+            for enterprise AI teams.
+          </p>
+        </Reveal>
 
-        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {items.map((c) => (
             <motion.div
               key={c.title}
               variants={fadeUp}
-              whileHover={{ y: -4 }}
-              className="group relative overflow-hidden rounded-2xl border border-border bg-surface/50 p-7 backdrop-blur transition-all hover:border-primary/40"
+              whileHover={{ y: -8 }}
+              className="group card-dark rounded-2xl p-6 transition-all hover:ring-lime hover:border-lime/40"
             >
-              <div
-                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{ background: "radial-gradient(400px circle at var(--x,50%) var(--y,50%), rgba(156,176,128,0.14), transparent 40%)" }}
-              />
-              <div className="relative flex items-start justify-between">
-                <div>
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-accent/60 ring-hairline">
-                    <c.icon className="h-5 w-5 text-primary" strokeWidth={1.6} />
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold">{c.title}</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">{c.desc}</p>
-                </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground transition-all group-hover:translate-x-1 group-hover:text-primary" />
-              </div>
+              <motion.span
+                whileHover={{ rotate: 8, scale: 1.08 }}
+                transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                className="grid h-11 w-11 place-items-center rounded-xl bg-lime/10 text-lime ring-1 ring-lime/25 group-hover:glow-lime"
+              >
+                <c.icon className="h-5 w-5" />
+              </motion.span>
+              <h3 className="mt-5 font-display text-lg font-semibold text-paper">{c.title}</h3>
+              <p className="mt-2 text-sm text-paper/70 leading-relaxed">{c.desc}</p>
             </motion.div>
           ))}
         </Stagger>
@@ -958,378 +579,398 @@ function Industries() {
   );
 }
 
-/* ---------- Command center mock ---------- */
-
-function CommandCenter() {
-  return (
-    <section className="relative overflow-hidden py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Infrastructure Intelligence</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              A live view of every GPU, every workload
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-4 text-muted-foreground">
-              Cluster health, utilization, training progress and inference throughput — surfaced
-              in a single command surface.
-            </p>
-          </Reveal>
-        </div>
-
-        <Reveal delay={0.15}>
-          <div className="relative mx-auto mt-14 max-w-6xl">
-            <div className="absolute -inset-6 -z-10 rounded-[2.5rem] bg-radial-glow blur-2xl" />
-            <div className="overflow-hidden rounded-3xl border border-border bg-surface/60 backdrop-blur-xl ring-hairline">
-              {/* window chrome */}
-              <div className="flex items-center justify-between border-b border-border px-5 py-3">
-                <div className="flex items-center gap-2">
-                  <span className="h-2.5 w-2.5 rounded-full bg-destructive/70" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-primary/70" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-secondary/70" />
-                  <span className="ml-4 font-mono text-[11px] text-muted-foreground">vertexgrid ▸ clusters ▸ prod-us-east</span>
-                </div>
-                <span className="font-mono text-[10px] text-primary">● connected</span>
-              </div>
-
-              <div className="grid gap-4 p-6 lg:grid-cols-12">
-                {/* left panel */}
-                <div className="space-y-4 lg:col-span-3">
-                  <PanelHeader label="Cluster Health" />
-                  {["prod-us-east", "prod-eu-west", "edge-lon", "hpc-lab-01"].map((c, i) => (
-                    <div key={c} className="flex items-center justify-between rounded-lg border border-border bg-background/40 px-3 py-2">
-                      <div>
-                        <div className="text-xs font-medium">{c}</div>
-                        <div className="font-mono text-[10px] text-muted-foreground">{[128, 96, 24, 512][i]} GPUs</div>
-                      </div>
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_var(--color-glow)]" />
-                    </div>
-                  ))}
-                </div>
-
-                {/* center */}
-                <div className="space-y-4 lg:col-span-6">
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      ["GPU util", "87%"],
-                      ["Throughput", "12.4k req/s"],
-                      ["Cost / hr", "$4,182"],
-                    ].map(([k, v]) => (
-                      <div key={k} className="rounded-xl border border-border bg-background/40 p-3">
-                        <div className="font-mono text-[10px] uppercase text-muted-foreground">{k}</div>
-                        <div className="mt-1 font-mono text-lg font-semibold">{v}</div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="rounded-xl border border-border bg-background/40 p-4">
-                    <PanelHeader label="Training Progress" />
-                    <div className="mt-3 space-y-3">
-                      {[
-                        ["llama-3-70b-tune", 72],
-                        ["vision-encoder-v4", 48],
-                        ["ranking-xlarge", 91],
-                      ].map(([name, p]) => (
-                        <div key={name as string}>
-                          <div className="mb-1 flex items-center justify-between text-xs">
-                            <span className="font-mono">{name}</span>
-                            <span className="font-mono text-muted-foreground">{p}%</span>
-                          </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                            <motion.div
-                              className="h-full bg-gradient-to-r from-secondary to-primary"
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${p}%` }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 1.2, ease: "easeOut" }}
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl border border-border bg-background/40 p-4">
-                    <PanelHeader label="Inference Throughput" />
-                    <ThroughputChart />
-                  </div>
-                </div>
-
-                {/* right panel */}
-                <div className="space-y-4 lg:col-span-3">
-                  <PanelHeader label="Resource Distribution" />
-                  <div className="rounded-xl border border-border bg-background/40 p-4">
-                    {[
-                      ["Training", 46, "bg-primary"],
-                      ["Inference", 34, "bg-secondary"],
-                      ["Batch", 14, "bg-accent"],
-                      ["Idle", 6, "bg-muted-foreground/50"],
-                    ].map(([l, v, c]) => (
-                      <div key={l as string} className="mb-3 last:mb-0">
-                        <div className="mb-1 flex items-center justify-between text-xs">
-                          <span>{l}</span>
-                          <span className="font-mono text-muted-foreground">{v}%</span>
-                        </div>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-                          <motion.div
-                            className={`h-full ${c}`}
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${v}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="rounded-xl border border-border bg-background/40 p-4">
-                    <PanelHeader label="Compute Efficiency" />
-                    <div className="mt-3 font-display text-3xl font-bold text-gradient">94.2%</div>
-                    <div className="font-mono text-[10px] text-muted-foreground">vs. baseline scheduler</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function PanelHeader({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-between">
-      <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
-      <span className="h-1 w-1 rounded-full bg-primary" />
-    </div>
-  );
-}
-
-function ThroughputChart() {
-  const pts = [12, 18, 14, 22, 28, 24, 30, 36, 32, 40, 46, 42, 50, 58, 52, 60];
-  const max = Math.max(...pts);
-  const path = pts
-    .map((v, i) => `${i === 0 ? "M" : "L"} ${(i / (pts.length - 1)) * 100} ${100 - (v / max) * 100}`)
-    .join(" ");
-  return (
-    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="mt-3 h-24 w-full">
-      <defs>
-        <linearGradient id="tg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#9CB080" stopOpacity="0.4" />
-          <stop offset="100%" stopColor="#9CB080" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <motion.path
-        d={`${path} L 100 100 L 0 100 Z`} fill="url(#tg)"
-        initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ duration: 1 }}
-      />
-      <motion.path
-        d={path} fill="none" stroke="#9CB080" strokeWidth="1.2" vectorEffect="non-scaling-stroke"
-        initial={{ pathLength: 0 }} whileInView={{ pathLength: 1 }} viewport={{ once: true }} transition={{ duration: 1.5, ease: "easeOut" }}
-      />
-    </svg>
-  );
-}
-
-/* ---------- Why VertexGrid ---------- */
-
-function WhyVertex() {
-  const traditional = [
-    "Fragmented compute across teams and clouds",
-    "Manual scaling and brittle scheduling",
-    "Inefficient GPU utilization at 30–50%",
-    "Limited visibility across the stack",
-  ];
-  const vertex = [
-    "Intelligent, intent-driven orchestration",
-    "AI-native, elastic infrastructure",
-    "Distributed compute optimization at 85%+ util",
-    "Enterprise-grade scale, security and observability",
+/* ---------- Pricing ---------- */
+function Pricing() {
+  const tiers = [
+    {
+      name: "Starter",
+      price: "$49",
+      period: "/month",
+      highlight: false,
+      features: ["Basic Deployments", "Monitoring", "Community Support", "5 Projects"],
+      cta: "Start Free Trial",
+    },
+    {
+      name: "Professional",
+      price: "$199",
+      period: "/month",
+      highlight: true,
+      features: ["Unlimited Deployments", "Auto Scaling", "Advanced Monitoring", "API Access"],
+      cta: "Get Started",
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      period: "",
+      highlight: false,
+      features: [
+        "Dedicated Infrastructure",
+        "SLA Support",
+        "Custom Integrations",
+        "Enterprise Security",
+      ],
+      cta: "Contact Sales",
+    },
   ];
   return (
-    <section className="relative py-28">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
-          <Reveal>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary">Why VertexGrid</p>
-          </Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl">
-              The gap between infrastructure and intelligence
-            </h2>
-          </Reveal>
-        </div>
-
-        <div className="mt-14 grid gap-6 lg:grid-cols-2">
-          <Reveal>
-            <div className="h-full rounded-3xl border border-border bg-surface/30 p-8 backdrop-blur">
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">Traditional Infrastructure</span>
-              </div>
-              <ul className="mt-6 space-y-4">
-                {traditional.map((t) => (
-                  <li key={t} className="flex items-start gap-3 text-sm text-muted-foreground">
-                    <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive/80" strokeWidth={1.6} />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="relative h-full overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-br from-accent/40 to-surface/60 p-8 backdrop-blur">
-              <div className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full" style={{ background: "radial-gradient(circle, var(--color-glow), transparent 70%)" }} />
-              <div className="relative flex items-center gap-2">
-                <LogoMark />
-                <span className="font-mono text-[11px] uppercase tracking-widest text-primary">VertexGrid</span>
-              </div>
-              <ul className="relative mt-6 space-y-4">
-                {vertex.map((t) => (
-                  <li key={t} className="flex items-start gap-3 text-sm text-foreground">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" strokeWidth={1.6} />
-                    {t}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Final CTA ---------- */
-
-function FloatingParticles({ count = 30 }: { count?: number }) {
-  const items = Array.from({ length: count });
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {items.map((_, i) => {
-        const size = 1 + Math.random() * 2.5;
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-        const d = 6 + Math.random() * 10;
-        return (
-          <motion.span
-            key={i}
-            className="absolute rounded-full bg-primary/60"
-            style={{ left: `${x}%`, top: `${y}%`, width: size, height: size, boxShadow: "0 0 8px var(--color-glow)" }}
-            animate={{ y: [0, -20, 0], opacity: [0.2, 0.8, 0.2] }}
-            transition={{ duration: d, repeat: Infinity, ease: "easeInOut", delay: Math.random() * 4 }}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
-function FinalCTA() {
-  return (
-    <section id="demo" className="relative overflow-hidden py-32">
-      <div className="pointer-events-none absolute inset-0 bg-radial-glow" />
-      <div className="pointer-events-none absolute inset-0 bg-grid opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_75%)]" />
-      <FloatingParticles count={30} />
-
-      <div className="relative mx-auto max-w-4xl px-6 text-center">
-        <Reveal>
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1 backdrop-blur">
-            <Database className="h-3.5 w-3.5 text-primary" strokeWidth={1.6} />
-            <span className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">Enterprise · Ready</span>
-          </div>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <h2 className="mt-6 font-display text-5xl font-bold tracking-tight sm:text-6xl">
-            Power Enterprise AI at <span className="text-gradient">Compute Scale.</span>
+    <section id="pricing" className="relative py-24 sm:py-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8">
+        <Reveal className="max-w-3xl">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-2">/ Pricing</span>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink">
+            Flexible Pricing for <span className="text-forest">Every Team</span>
           </h2>
         </Reveal>
-        <Reveal delay={0.1}>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
-            Build, train, deploy and scale AI workloads with intelligent compute infrastructure.
-          </p>
-        </Reveal>
-        <Reveal delay={0.15}>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#contact"
-              className="group inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-[0_10px_50px_-10px_var(--color-glow)] transition-all hover:shadow-[0_10px_80px_-5px_var(--color-glow)]"
+
+        <Stagger className="mt-14 grid gap-6 lg:grid-cols-3">
+          {tiers.map((t) => (
+            <motion.div
+              key={t.name}
+              variants={fadeUp}
+              whileHover={{ y: -8 }}
+              className={`relative rounded-3xl p-8 transition-shadow ${
+                t.highlight
+                  ? "bg-forest text-paper ring-1 ring-lime/40 shadow-[0_40px_100px_-40px_rgba(26,46,34,0.6)] glow-lime"
+                  : "bg-card border border-hairline hover:shadow-[0_20px_60px_-30px_rgba(17,17,17,0.25)]"
+              }`}
             >
-              Request Demo
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-7 py-3.5 text-sm font-semibold text-foreground backdrop-blur transition-all hover:bg-surface-elevated"
-            >
-              Talk to Sales
-            </a>
-          </div>
+              {t.highlight && (
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime px-3 py-1 text-xs font-semibold text-forest">
+                  Most Popular
+                </span>
+              )}
+              <h3
+                className={`font-display text-xl font-semibold ${
+                  t.highlight ? "text-paper" : "text-ink"
+                }`}
+              >
+                {t.name}
+              </h3>
+              <div className="mt-5 flex items-baseline gap-1">
+                <span
+                  className={`font-display text-5xl font-bold ${
+                    t.highlight ? "text-lime" : "text-ink"
+                  }`}
+                >
+                  {t.price}
+                </span>
+                <span className={t.highlight ? "text-paper/60" : "text-ink-2"}>{t.period}</span>
+              </div>
+              <ul className="mt-8 space-y-3">
+                {t.features.map((f) => (
+                  <li key={f} className="flex items-start gap-3 text-sm">
+                    <span
+                      className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${
+                        t.highlight ? "bg-lime text-forest" : "bg-forest text-lime"
+                      }`}
+                    >
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                    <span className={t.highlight ? "text-paper/85" : "text-ink"}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href="#contact"
+                className={`mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-transform hover:scale-[1.03] ${
+                  t.highlight
+                    ? "bg-lime text-forest"
+                    : "bg-forest text-paper hover:bg-forest-2"
+                }`}
+              >
+                {t.cta} <ArrowRight className="h-4 w-4" />
+              </a>
+            </motion.div>
+          ))}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- FAQ ---------- */
+function FAQ() {
+  const items = [
+    {
+      q: "What is OriginSearch?",
+      a: "OriginSearch is an enterprise AI deployment platform that automates model deployment, orchestration, monitoring, and scaling across cloud, edge, and hybrid infrastructure.",
+    },
+    {
+      q: "Which cloud providers are supported?",
+      a: "AWS, Google Cloud, Microsoft Azure, and on-premises Kubernetes clusters — with unified networking and a single control plane.",
+    },
+    {
+      q: "Can I deploy containerized models?",
+      a: "Yes. Bring your own container, or use our framework-native runtimes for PyTorch, TensorFlow, ONNX, JAX, and vLLM.",
+    },
+    {
+      q: "Does it support auto scaling?",
+      a: "Elastic autoscaling reacts to traffic in seconds, scaling replicas, GPUs, and regions based on latency and throughput targets.",
+    },
+    {
+      q: "Is model versioning included?",
+      a: "Every deployment has a versioned artifact with lineage, promotion pipelines, canary rollouts, and one-click rollback.",
+    },
+    {
+      q: "Is there an API available?",
+      a: "A full REST and gRPC API, plus SDKs for Python, TypeScript, and Go — everything in the UI is available programmatically.",
+    },
+  ];
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="relative py-24 sm:py-32 bg-white">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        <Reveal className="text-center">
+          <span className="font-mono text-xs uppercase tracking-widest text-ink-2">/ FAQ</span>
+          <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold text-ink">
+            Frequently Asked <span className="text-forest">Questions</span>
+          </h2>
         </Reveal>
+
+        <Stagger className="mt-14 grid gap-3">
+          {items.map((it, i) => {
+            const isOpen = open === i;
+            return (
+              <motion.div
+                key={it.q}
+                variants={fadeUp}
+                className={`rounded-2xl border transition-colors ${
+                  isOpen ? "border-forest bg-muted/40" : "border-hairline bg-card"
+                }`}
+              >
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left"
+                >
+                  <span className="font-display text-base sm:text-lg font-semibold text-ink">
+                    {it.q}
+                  </span>
+                  <motion.span
+                    animate={{ rotate: isOpen ? 45 : 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-forest text-lime"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </motion.span>
+                </button>
+                <motion.div
+                  initial={false}
+                  animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
+                  className="overflow-hidden"
+                >
+                  <p className="px-6 pb-6 text-sm sm:text-base text-ink-2 leading-relaxed">
+                    {it.a}
+                  </p>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </Stagger>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Contact ---------- */
+function Contact() {
+  const [status, setStatus] = useState<"idle" | "sent">("idle");
+  return (
+    <section id="contact" className="relative overflow-hidden bg-forest text-paper py-24 sm:py-32">
+      <div className="absolute inset-0 bg-grid-dark opacity-50" />
+      <div className="absolute inset-0 bg-[radial-gradient(50%_40%_at_20%_20%,rgba(198,241,53,0.15),transparent_70%)]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+          <Reveal>
+            <span className="font-mono text-xs uppercase tracking-widest text-lime">/ Contact</span>
+            <h2 className="mt-3 font-display text-3xl sm:text-4xl lg:text-5xl font-semibold leading-tight">
+              Let's Build <span className="text-lime">Production AI</span> Together
+            </h2>
+            <p className="mt-5 max-w-lg text-lg text-paper/70 leading-relaxed">
+              Ready to deploy AI with confidence? Speak with our team to learn how OriginSearch
+              simplifies AI deployment and infrastructure management.
+            </p>
+            <div className="mt-10 grid gap-4">
+              {[
+                { icon: Layers, label: "Enterprise onboarding in under 2 weeks" },
+                { icon: ShieldCheck, label: "SOC 2 Type II · ISO 27001 · HIPAA-ready" },
+                { icon: Server, label: "Dedicated deployment engineers" },
+              ].map((it) => (
+                <div key={it.label} className="flex items-center gap-3 text-sm text-paper/85">
+                  <span className="grid h-9 w-9 place-items-center rounded-lg bg-lime/10 text-lime ring-1 ring-lime/25">
+                    <it.icon className="h-4 w-4" />
+                  </span>
+                  {it.label}
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.1}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setStatus("sent");
+                setTimeout(() => setStatus("idle"), 3500);
+              }}
+              className="rounded-3xl border border-lime/15 bg-forest-2/70 backdrop-blur p-6 sm:p-8 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)]"
+            >
+              <Stagger className="grid gap-4">
+                {[
+                  { name: "name", label: "Full Name", type: "text", required: true },
+                  { name: "company", label: "Company Name", type: "text", required: true },
+                  { name: "email", label: "Email Address", type: "email", required: true },
+                ].map((f) => (
+                  <motion.div key={f.name} variants={fadeUp}>
+                    <label className="mb-1.5 block text-xs font-mono uppercase tracking-widest text-paper/60">
+                      {f.label}
+                    </label>
+                    <input
+                      required={f.required}
+                      type={f.type}
+                      name={f.name}
+                      maxLength={200}
+                      className="w-full rounded-xl border border-paper/15 bg-forest/60 px-4 py-3 text-sm text-paper placeholder:text-paper/40 outline-none transition-all focus:border-lime focus:ring-2 focus:ring-lime/40"
+                    />
+                  </motion.div>
+                ))}
+                <motion.div variants={fadeUp}>
+                  <label className="mb-1.5 block text-xs font-mono uppercase tracking-widest text-paper/60">
+                    Deployment Requirements
+                  </label>
+                  <select
+                    name="requirements"
+                    className="w-full rounded-xl border border-paper/15 bg-forest/60 px-4 py-3 text-sm text-paper outline-none transition-all focus:border-lime focus:ring-2 focus:ring-lime/40"
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      Select an option
+                    </option>
+                    <option>Single-cloud deployment</option>
+                    <option>Multi-cloud / hybrid</option>
+                    <option>Edge deployment</option>
+                    <option>Dedicated / on-premise</option>
+                  </select>
+                </motion.div>
+                <motion.div variants={fadeUp}>
+                  <label className="mb-1.5 block text-xs font-mono uppercase tracking-widest text-paper/60">
+                    Message
+                  </label>
+                  <textarea
+                    name="message"
+                    rows={4}
+                    maxLength={1000}
+                    className="w-full resize-none rounded-xl border border-paper/15 bg-forest/60 px-4 py-3 text-sm text-paper placeholder:text-paper/40 outline-none transition-all focus:border-lime focus:ring-2 focus:ring-lime/40"
+                    placeholder="Tell us about your AI deployment goals…"
+                  />
+                </motion.div>
+                <motion.button
+                  variants={fadeUp}
+                  type="submit"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-lime px-6 py-3.5 text-sm font-semibold text-forest shadow-[0_20px_50px_-16px_rgba(198,241,53,0.6)]"
+                >
+                  {status === "sent" ? "Message Sent ✓" : "Send Message"}
+                  {status !== "sent" && <ArrowRight className="h-4 w-4" />}
+                </motion.button>
+              </Stagger>
+            </form>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
 }
 
 /* ---------- Footer ---------- */
-
 function Footer() {
-  const cols: [string, { label: string; soon?: boolean }[]][] = [
-    ["Platform", [{ label: "Compute Infrastructure" }, { label: "GPU Orchestration" }, { label: "Distributed Training" }]],
-    ["Resources", [{ label: "Documentation", soon: true }, { label: "Developer API", soon: true }]],
-    ["Company", [{ label: "About" }, { label: "Contact" }]],
+  const cols = [
+    {
+      title: "Quick Links",
+      links: [
+        { label: "About", href: "#about" },
+        { label: "Features", href: "#features" },
+        { label: "Pricing", href: "#pricing" },
+        { label: "FAQ", href: "#faq" },
+        { label: "Contact", href: "#contact" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "Documentation (Coming Soon)", href: "#" },
+        { label: "Developer API", href: "#" },
+        { label: "Integrations", href: "#" },
+        { label: "Security", href: "#" },
+      ],
+    },
+  ];
+  const socials = [
+    { icon: Linkedin, label: "LinkedIn", href: "#" },
+    { icon: Github, label: "GitHub", href: "#" },
+    { icon: Twitter, label: "X", href: "#" },
   ];
   return (
-    <footer id="contact" className="border-t border-border bg-background">
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
-          <div>
-            <div className="flex items-center gap-2">
-              <LogoMark />
-              <span className="font-display text-lg font-bold">VertexGrid</span>
-              <span className="font-mono text-[10px] text-muted-foreground">.one</span>
-            </div>
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              The enterprise AI compute platform. Orchestrate GPU infrastructure, accelerate
-              training, and scale inference across cloud and edge.
+    <footer className="bg-footer text-paper/80">
+      <div className="mx-auto max-w-7xl px-5 sm:px-8 py-16">
+        <div className="grid gap-10 lg:grid-cols-4">
+          <div className="lg:col-span-1">
+            <a href="#home" className="flex items-center gap-2">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-lime text-forest shadow-[0_0_40px_-8px_rgba(198,241,53,0.7)]">
+                <Radar className="h-4 w-4" strokeWidth={2.4} />
+              </span>
+              <span className="font-display text-lg font-bold text-paper">
+                OriginSearch<span className="text-paper/60 font-medium">.one</span>
+              </span>
+            </a>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-paper/60">
+              Enterprise AI deployment, orchestration, and lifecycle management platform.
             </p>
-            <div className="mt-6 font-mono text-[11px] text-muted-foreground">
-              hello@vertexgrid.one
-            </div>
           </div>
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {cols.map(([title, links]) => (
-              <div key={title}>
-                <div className="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">{title}</div>
-                <ul className="mt-4 space-y-3">
-                  {links.map((l) => (
-                    <li key={l.label} className="flex items-center gap-2">
-                      <a href="#" className="text-sm text-foreground/90 transition-colors hover:text-primary">
-                        {l.label}
-                      </a>
-                      {l.soon && (
-                        <span className="rounded-full border border-border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
-                          Soon
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          {cols.map((c) => (
+            <div key={c.title}>
+              <h4 className="font-display text-sm font-semibold uppercase tracking-widest text-paper">
+                {c.title}
+              </h4>
+              <ul className="mt-4 space-y-2.5">
+                {c.links.map((l) => (
+                  <li key={l.label}>
+                    <a
+                      href={l.href}
+                      className="text-sm text-paper/70 transition-colors hover:text-lime"
+                    >
+                      {l.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+          <div>
+            <h4 className="font-display text-sm font-semibold uppercase tracking-widest text-paper">
+              Follow
+            </h4>
+            <div className="mt-4 flex items-center gap-3">
+              {socials.map((s) => (
+                <a
+                  key={s.label}
+                  href={s.href}
+                  aria-label={s.label}
+                  className="grid h-10 w-10 place-items-center rounded-full border border-paper/15 text-paper transition-all hover:-translate-y-1 hover:border-lime hover:text-lime hover:bg-lime/5"
+                >
+                  <s.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <div>© {new Date().getFullYear()} VertexGrid, Inc. All rights reserved.</div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-foreground">Privacy</a>
-            <a href="#" className="hover:text-foreground">Terms</a>
-            <a href="#" className="hover:text-foreground">Security</a>
-          </div>
+        <div className="mt-14 flex flex-col-reverse items-start gap-3 border-t border-paper/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-paper/50">© 2026 OriginSearch.one. All rights reserved.</p>
+          <p className="text-xs font-mono uppercase tracking-widest text-paper/40">
+            Built for production AI · v4 runtime
+          </p>
         </div>
       </div>
     </footer>
@@ -1337,24 +978,21 @@ function Footer() {
 }
 
 /* ---------- Page ---------- */
-
 function LandingPage() {
   return (
-    <main className="relative min-h-screen bg-background text-foreground">
+    <div className="relative">
+      <CursorGlow />
       <Nav />
-      <Hero />
-      <Ecosystem />
-      <Architecture />
-      <Capabilities />
-      <InfrastructureViz />
-      <Metrics />
-      <HowItWorks />
-      <ModernOps />
-      <Industries />
-      <CommandCenter />
-      <WhyVertex />
-      <FinalCTA />
+      <main>
+        <Hero />
+        <About />
+        <HowItWorks />
+        <Features />
+        <Pricing />
+        <FAQ />
+        <Contact />
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }
