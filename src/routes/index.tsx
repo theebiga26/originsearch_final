@@ -908,9 +908,9 @@ function Footer() {
     },
   ];
   const socials = [
-    { icon: Linkedin, label: "LinkedIn", href: "#" },
-    { icon: Github, label: "GitHub", href: "#" },
-    { icon: Twitter, label: "X", href: "#" },
+    { icon: LinkedinIcon, label: "LinkedIn", href: "#" },
+    { icon: GithubIcon, label: "GitHub", href: "#" },
+    { icon: TwitterIcon, label: "X", href: "#" },
   ];
   return (
     <footer className="bg-footer text-paper/80">
