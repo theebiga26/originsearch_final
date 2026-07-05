@@ -77,27 +77,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "VertexGrid — The Enterprise AI Compute Platform" },
+      { title: "OriginSearch — The AI Deployment Platform for Production Intelligence" },
       {
         name: "description",
         content:
-          "VertexGrid orchestrates GPU infrastructure, accelerates AI workloads, and scales distributed intelligence across cloud and edge environments.",
+          "OriginSearch deploys, orchestrates, monitors, and scales AI models across cloud, edge, and hybrid environments with enterprise-grade automation.",
       },
-      { name: "author", content: "VertexGrid" },
-      { name: "theme-color", content: "#060F2E" },
-      { property: "og:title", content: "VertexGrid — The Enterprise AI Compute Platform" },
+      { name: "author", content: "OriginSearch" },
+      { name: "theme-color", content: "#1A2E22" },
+      { property: "og:title", content: "OriginSearch — The AI Deployment Platform" },
       {
         property: "og:description",
         content:
-          "Intelligent GPU orchestration, distributed training, and inference acceleration for enterprise AI.",
+          "Deploy, orchestrate, monitor, and scale AI models across cloud, edge, and hybrid environments.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "VertexGrid — The Enterprise AI Compute Platform" },
+      { name: "twitter:title", content: "OriginSearch — The AI Deployment Platform" },
       {
         name: "twitter:description",
         content:
-          "Intelligent GPU orchestration, distributed training, and inference acceleration for enterprise AI.",
+          "Deploy, orchestrate, monitor, and scale AI models across cloud, edge, and hybrid environments.",
       },
     ],
     links: [
@@ -107,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
       },
     ],
   }),
