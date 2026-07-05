@@ -17,9 +17,9 @@ import {
   Plus,
   ArrowRight,
   Check,
-  Linkedin as LinkedinIcon,
-  Github as GithubIcon,
-  Twitter as TwitterIcon,
+  Briefcase as LinkedinIcon,
+  Code2 as GithubIcon,
+  Send as TwitterIcon,
   Menu,
   X,
   Zap,
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
 /* ---------- Motion helpers ---------- */
 const fadeUp = {
   hidden: { opacity: 0, y: 50 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } },
 };
 const stagger = {
   hidden: {},
