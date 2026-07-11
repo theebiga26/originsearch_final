@@ -108,6 +108,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
+        rel: "preload",
+        as: "style",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
+      },
+      {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap",
       },
@@ -128,18 +133,18 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
-        {/* Tawk.to Script */}
+        {/* Tawk.to Script (Deferred) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
+setTimeout(function(){
 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
 s1.async=true;
 s1.src='https://embed.tawk.to/6a50d94f5d9f411d4920a86d/1jt5t1nqa';
 s1.charset='UTF-8';
 s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();`,
+if(s0) s0.parentNode.insertBefore(s1,s0); else document.body.appendChild(s1);
+}, 3500);`,
           }}
         />
       </body>
