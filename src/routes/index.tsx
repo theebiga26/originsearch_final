@@ -43,7 +43,8 @@ import hero5 from "../assets/hero_5.svg";
 import hero6 from "../assets/hero_6.svg";
 import about1 from "../assets/About_1.svg";
 import about2 from "../assets/About_2.svg";
-import ctaTeam from "../assets/cta_team.png";
+import ctaTeam from "../assets/CTA.svg";
+import ctaBg from "../assets/CTA_Bg.svg";
 import aiDeploymentIcon from "../assets/AI Deployment.svg";
 import infraAutomationIcon from "../assets/Infrastructure Automation.svg";
 import lifecycleMgmtIcon from "../assets/Lifecycle Management.svg";
@@ -1415,7 +1416,7 @@ function FAQ() {
       a: "Yes. Real-time monitoring provides visibility into deployment health, inference latency, resource utilization, uptime, and operational performance.",
     },
   ];
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
     <section id="faq" className="relative bg-[#F5F3EF] py-16 sm:py-24 border-b border-[#1A2E22]/10 overflow-hidden">
@@ -1510,15 +1511,19 @@ function FAQ() {
 function CTA() {
   return (
     <section id="cta" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24 pt-24 sm:pt-32">
-      <div className="w-full relative z-10 bg-[#1A2E22] rounded-[2rem] sm:rounded-[3.5rem] shadow-2xl flex flex-col md:flex-row items-stretch">
+      <div 
+        className="w-full relative z-10 bg-[#1A2E22] rounded-[2rem] sm:rounded-[3.5rem] shadow-2xl flex flex-col md:flex-row items-stretch bg-cover bg-center"
+        style={{ backgroundImage: `url(${ctaBg})` }}
+      >
         
+
         {/* Left Side Content */}
-        <div className="flex-1 py-10 px-8 sm:py-14 sm:px-12 lg:py-16 lg:px-16 relative z-10 flex flex-col justify-center">
+        <div className="flex-1 py-10 px-6 sm:py-14 sm:pl-20 sm:pr-12 lg:py-16 lg:pl-28 lg:pr-16 relative z-10 flex flex-col justify-center">
           <Reveal>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-4xl font-bold text-[#F5F3EF] leading-tight mb-5">
               Start Your <span className="text-[#C6F135]">AI Journey</span><br/> with OriginSearch Today!
             </h2>
-            <p className="text-[#F5F3EF]/80 text-sm sm:text-base mb-8 leading-relaxed pr-4 md:pr-0">
+            <p className="text-[#F5F3EF]/90 text-sm sm:text-base mb-8 leading-relaxed pr-4 md:pr-0 font-medium">
               Deploy, manage, and scale your AI models in minutes. Experience the unified platform built for modern enterprise workloads.
             </p>
             <a href="#contact" className="inline-flex items-center gap-4 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-2 pl-8 hover:scale-[1.02] active:scale-95 transition-transform shadow-md group max-w-max pointer-events-auto">
@@ -1538,7 +1543,7 @@ function CTA() {
             <img 
               src={ctaTeam} 
               alt="OriginSearch Engineering Team" 
-              className="relative z-10 w-auto h-full object-contain object-bottom grayscale drop-shadow-2xl"
+              className="relative z-10 w-auto h-full object-contain object-bottom drop-shadow-2xl"
               width="800"
               height="600"
               loading="lazy"
