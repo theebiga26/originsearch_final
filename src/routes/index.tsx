@@ -1153,7 +1153,7 @@ function TargetUsers() {
                   >
                     {/* Icon perfectly centered on the coordinate */}
                     <div className="absolute -left-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-forest border-2 border-lime/30 shadow-[0_0_15px_rgba(26,46,34,0.1)] text-lime group-hover:border-lime group-hover:bg-lime group-hover:text-forest group-hover:shadow-[0_0_20px_rgba(198,241,53,0.4)] group-hover:scale-110 transition-all duration-300 overflow-hidden">
-                      <img src={user.icon} alt={user.role} className="w-8 h-8 object-contain scale-95" />
+                      <img src={user.icon} alt={user.role} className="w-8 h-8 object-contain scale-95" width="32" height="32" loading="lazy" />
                     </div>
 
                     {/* Text box offset to the side */}
@@ -1237,7 +1237,7 @@ function Features() {
                       }}
                     >
                       <div className="flex h-24 w-24 items-center justify-center rounded-full bg-forest border border-lime/50 mb-6 shadow-[0_0_20px_rgba(198,241,53,0.3)] group-hover:scale-110 group-hover:border-lime group-hover:shadow-[0_0_40px_rgba(198,241,53,0.7)] transition-all duration-500 overflow-hidden shrink-0">
-                        <img src={c.icon} alt={c.title} className="w-14 h-14 object-contain" />
+                        <img src={c.icon} alt={c.title} className="w-14 h-14 object-contain" width="56" height="56" loading="lazy" />
                       </div>
                       <h3 className="font-display text-xl font-bold text-paper mb-3 group-hover:text-lime transition-colors">{c.title}</h3>
                       <p className="text-sm text-paper/70 leading-relaxed">{c.desc}</p>
@@ -1892,7 +1892,7 @@ function CookieConsent() {
 /* ---------- Tawk.to Chat ---------- */
 function TawkChat() {
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const loadTawk = () => {
       if (document.getElementById('tawk-script')) return;
       const s1 = document.createElement("script");
       const s0 = document.getElementsByTagName("script")[0];
@@ -1906,9 +1906,23 @@ function TawkChat() {
       } else {
         document.body.appendChild(s1);
       }
-    }, 5000); // Delay by 5 seconds to prioritize page load
-    
-    return () => clearTimeout(timer);
+      
+      // Remove event listeners once loaded
+      ['scroll', 'mousemove', 'touchstart', 'keydown'].forEach(event => {
+        window.removeEventListener(event, loadTawk);
+      });
+    };
+
+    // Add event listeners to load on first interaction
+    ['scroll', 'mousemove', 'touchstart', 'keydown'].forEach(event => {
+      window.addEventListener(event, loadTawk, { passive: true, once: true });
+    });
+
+    return () => {
+      ['scroll', 'mousemove', 'touchstart', 'keydown'].forEach(event => {
+        window.removeEventListener(event, loadTawk);
+      });
+    };
   }, []);
 
   return null;
