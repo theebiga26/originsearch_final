@@ -44,8 +44,34 @@ import hero6 from "../assets/hero_6.svg";
 import about1 from "../assets/About_1.svg";
 import about2 from "../assets/About_2.svg";
 import ctaTeam from "../assets/cta_team.png";
+import aiDeploymentIcon from "../assets/AI Deployment.svg";
+import infraAutomationIcon from "../assets/Infrastructure Automation.svg";
+import lifecycleMgmtIcon from "../assets/Lifecycle Management.svg";
+import enterpriseMonitoringIcon from "../assets/Enterprise Monitoring.svg";
+import workflowConnectGif from "../assets/Connect Your AI Ecosystem.gif";
+import workflowPackageGif from "../assets/Package & Prepare.gif";
+import workflowDeployGif from "../assets/Deploy & Orchestrate.gif";
+import workflowMonitorGif from "../assets/Monitor & Optimize.gif";
 import { Pricing } from "../components/sections/Pricing";
 import { TiltCard } from "../components/ui/TiltCard";
+
+import mlEngineerIcon from "../assets/Machine Learning Engineers.svg";
+import devopsIcon from "../assets/DevOps & Platform Teams.svg";
+import dataScientistIcon from "../assets/Data Scientists.svg";
+import pmIcon from "../assets/AI Product Managers.svg";
+
+import featDeployIcon from "../assets/AI Deployment Engine.svg";
+import featOrchestrationIcon from "../assets/AI Deployment Engine (2).svg";
+import featLifecycleIcon from "../assets/Lifecycle Management.svg";
+import featScalingIcon from "../assets/Auto Scaling Infrastructure.svg";
+import featMonitorIcon from "../assets/Runtime Monitoring.svg";
+import featCloudIcon from "../assets/Cloud & Edge Deployment.svg";
+import featAnalyticsIcon from "../assets/Deployment Analytics.svg";
+import featSecurityIcon from "../assets/Security & Compliance.svg";
+
+import testi1 from "../assets/testi (1).svg";
+import testi2 from "../assets/testi (2).svg";
+import testi3 from "../assets/testi (3).svg";
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -699,22 +725,22 @@ function About() {
 function CorePillars() {
   const cards = [
     {
-      icon: Rocket,
+      icon: aiDeploymentIcon,
       title: "AI Deployment",
       desc: "Ship models to production with a single command and zero-downtime rollouts.",
     },
     {
-      icon: Cpu,
+      icon: infraAutomationIcon,
       title: "Infrastructure Automation",
       desc: "Provision GPUs, networks, and storage automatically across any cloud.",
     },
     {
-      icon: GitBranch,
+      icon: lifecycleMgmtIcon,
       title: "Lifecycle Management",
       desc: "Version, promote, and roll back models with full lineage and audit trails.",
     },
     {
-      icon: Activity,
+      icon: enterpriseMonitoringIcon,
       title: "Enterprise Monitoring",
       desc: "Deep observability across latency, throughput, drift, and cost — in real time.",
     },
@@ -825,7 +851,7 @@ function CorePillars() {
                     {/* Main background (Dark Green) */}
                     <div className="absolute inset-0 bg-[#1A2E22] rounded-full border border-[#C6F135]/20"></div>
 
-                    <c.icon className="relative z-10 w-8 h-8 lg:w-10 lg:h-10 text-white group-hover:text-[#C6F135] transition-colors duration-300" />
+                    <img src={c.icon} alt={c.title} className="relative z-10 w-12 h-12 lg:w-[70px] lg:h-[70px] object-contain group-hover:scale-110 transition-transform duration-300" />
                   </div>
                   <div className="flex-1 bg-white/60 lg:bg-transparent p-5 lg:p-0 rounded-2xl lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none border border-white/40 lg:border-none shadow-sm lg:shadow-none">
                     <h3 className="font-display text-lg lg:text-xl font-bold text-[#111111]">{c.title}</h3>
@@ -847,7 +873,7 @@ function HowItWorks() {
   const steps = [
     {
       num: "01",
-      icon: Cloud,
+      icon: workflowConnectGif,
       title: "Connect Your AI Ecosystem",
       desc: "Integrate repositories, cloud providers, Kubernetes clusters, container registries, APIs, and deployment environments into a unified operational workspace.",
       bannerColor: "#FFFFFF",
@@ -861,7 +887,7 @@ function HowItWorks() {
     },
     {
       num: "02",
-      icon: Layers,
+      icon: workflowPackageGif,
       title: "Package & Prepare",
       desc: "Automatically package AI models, configure runtime environments, validate dependencies, and prepare deployment artifacts for production.",
       bannerColor: "#C6F135",
@@ -875,7 +901,7 @@ function HowItWorks() {
     },
     {
       num: "03",
-      icon: Rocket,
+      icon: workflowDeployGif,
       title: "Deploy & Orchestrate",
       desc: "Launch AI services through intelligent orchestration that manages inference routing, workload balancing, deployment strategies, and environment consistency.",
       bannerColor: "#FFFFFF",
@@ -889,7 +915,7 @@ function HowItWorks() {
     },
     {
       num: "04",
-      icon: Activity,
+      icon: workflowMonitorGif,
       title: "Monitor & Optimize",
       desc: "Track deployment health, latency, resource utilization, model performance, scaling activity, and operational insights from a centralized dashboard.",
       bannerColor: "#C6F135",
@@ -931,7 +957,7 @@ function HowItWorks() {
                         <div className="absolute inset-0 bg-[#24382C] rounded-full"></div>
                         <span className="font-display text-3xl font-black relative z-10 text-white">{s.num}</span>
                       </div>
-                      <s.icon className="w-10 h-10 opacity-90" />
+                      <img src={s.icon} alt={s.title} className="w-16 h-16 object-contain drop-shadow-md mix-blend-multiply" />
                     </div>
                     <div className="relative z-10">
                       <h4 className="font-display font-bold text-xl mb-3">{s.title}</h4>
@@ -971,7 +997,7 @@ function HowItWorks() {
                             style={{ backgroundColor: s.diamondBg }}
                           >
                             <div className="-rotate-45 group-hover:-rotate-[135deg] transition-transform duration-500">
-                              <s.icon className="w-8 h-8" style={{ color: s.iconColor }} />
+                              <img src={s.icon} alt={s.title} className="w-12 h-12 object-contain mix-blend-multiply" />
                             </div>
                           </div>
 
@@ -1024,27 +1050,27 @@ function TargetUsers() {
     {
       role: "Machine Learning Engineers",
       description: "Streamline model deployment, versioning, and inference optimization without managing infrastructure overhead.",
-      icon: <Brain className="h-6 w-6" />,
+      icon: mlEngineerIcon,
     },
     {
       role: "DevOps & Platform Teams",
       description: "Automate AI infrastructure provisioning, scaling, and monitoring with enterprise-grade reliability and security.",
-      icon: <Settings className="h-6 w-6" />,
+      icon: devopsIcon,
     },
     {
       role: "Data Scientists",
       description: "Focus on building better models and analyzing results while we handle the complexities of production deployment.",
-      icon: <Database className="h-6 w-6" />,
+      icon: dataScientistIcon,
     },
     {
       role: "AI Product Managers",
       description: "Accelerate time-to-market for AI features with predictable deployment pipelines and clear performance metrics.",
-      icon: <LineChart className="h-6 w-6" />,
+      icon: pmIcon,
     },
   ];
 
   return (
-    <section id="users" className="bg-[#F5F3EF] pt-8 sm:pt-12 pb-12 sm:pb-16 overflow-hidden">
+    <section id="users" className="bg-[#F5F3EF] pt-16 sm:pt-20 pb-12 sm:pb-16 overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid lg:grid-cols-[1fr_1.2fr] gap-16 lg:gap-8 items-center">
 
@@ -1080,7 +1106,7 @@ function TargetUsers() {
           </div>
 
           {/* Right Column: Orbiting UI */}
-          <div className="relative flex items-center justify-center h-[350px] sm:h-[400px] lg:h-[500px] w-full mt-10 lg:mt-0 overflow-hidden">
+          <div className="relative flex items-center justify-center h-[350px] sm:h-[400px] lg:h-[500px] w-full mt-10 lg:mt-0">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.55] sm:scale-75 lg:scale-100 w-[600px] h-[600px] flex items-center justify-center">
               {/* Background Orbits */}
               <motion.div 
@@ -1125,8 +1151,8 @@ function TargetUsers() {
                     className="absolute left-1/2 top-1/2 z-20 group cursor-default"
                   >
                     {/* Icon perfectly centered on the coordinate */}
-                    <div className="absolute -left-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-forest border-2 border-lime/30 shadow-[0_0_15px_rgba(26,46,34,0.1)] text-lime group-hover:border-lime group-hover:bg-lime group-hover:text-forest group-hover:shadow-[0_0_20px_rgba(198,241,53,0.4)] group-hover:scale-110 transition-all duration-300">
-                      <div className="scale-95">{user.icon}</div>
+                    <div className="absolute -left-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-forest border-2 border-lime/30 shadow-[0_0_15px_rgba(26,46,34,0.1)] text-lime group-hover:border-lime group-hover:bg-lime group-hover:text-forest group-hover:shadow-[0_0_20px_rgba(198,241,53,0.4)] group-hover:scale-110 transition-all duration-300 overflow-hidden">
+                      <img src={user.icon} alt={user.role} className="w-8 h-8 object-contain scale-95" />
                     </div>
 
                     {/* Text box offset to the side */}
@@ -1148,14 +1174,14 @@ function TargetUsers() {
 /* ---------- Features ---------- */
 function Features() {
   const items = [
-    { icon: Rocket, title: "AI Deployment Automation", desc: "Deploy AI models with automated packaging, infrastructure provisioning, and environment configuration." },
-    { icon: Workflow, title: "Inference Orchestration", desc: "Intelligently distribute inference requests to maximize speed, reliability, and resource efficiency." },
-    { icon: GitBranch, title: "Model Lifecycle Management", desc: "Manage version history, staged releases, rollback capabilities, and controlled deployment strategies." },
-    { icon: Gauge, title: "Auto Scaling Engine", desc: "Automatically expand or reduce compute resources based on application demand and inference traffic." },
-    { icon: Activity, title: "Runtime Monitoring", desc: "Monitor deployment status, latency, throughput, uptime, and system health in real time." },
-    { icon: Cloud, title: "Cloud & Edge Deployment", desc: "Deploy AI applications seamlessly across public cloud, private infrastructure, edge devices, and hybrid environments." },
-    { icon: BarChart3, title: "Infrastructure Analytics", desc: "Visualize deployment performance through operational dashboards, usage trends, infrastructure metrics, and deployment success insights." },
-    { icon: ShieldCheck, title: "Enterprise Security", desc: "Support secure deployment pipelines with controlled access, deployment validation, and enterprise-ready operational governance." },
+    { icon: featDeployIcon, title: "AI Deployment Automation", desc: "Deploy AI models with automated packaging, infrastructure provisioning, and environment configuration." },
+    { icon: featOrchestrationIcon, title: "Inference Orchestration", desc: "Intelligently distribute inference requests to maximize speed, reliability, and resource efficiency." },
+    { icon: featLifecycleIcon, title: "Model Lifecycle Management", desc: "Manage version history, staged releases, rollback capabilities, and controlled deployment strategies." },
+    { icon: featScalingIcon, title: "Auto Scaling Engine", desc: "Automatically expand or reduce compute resources based on application demand and inference traffic." },
+    { icon: featMonitorIcon, title: "Runtime Monitoring", desc: "Monitor deployment status, latency, throughput, uptime, and system health in real time." },
+    { icon: featCloudIcon, title: "Cloud & Edge Deployment", desc: "Deploy AI applications seamlessly across public cloud, private infrastructure, edge devices, and hybrid environments." },
+    { icon: featAnalyticsIcon, title: "Infrastructure Analytics", desc: "Visualize deployment performance through operational dashboards, usage trends, infrastructure metrics, and deployment success insights." },
+    { icon: featSecurityIcon, title: "Enterprise Security", desc: "Support secure deployment pipelines with controlled access, deployment validation, and enterprise-ready operational governance." },
   ];
   return (
     <section id="features" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-12 sm:pb-24">
@@ -1176,26 +1202,26 @@ function Features() {
 
           {/* 3D Carousel Container */}
           <div
-            className="relative mt-6 h-[300px] sm:h-[420px] w-full flex items-center justify-center overflow-hidden"
+            className="relative mt-6 h-[400px] sm:h-[520px] w-full flex items-center justify-center overflow-hidden"
             style={{ perspective: '1200px' }}
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.6] sm:scale-80 md:scale-100 flex items-center justify-center w-full h-full">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.5] sm:scale-[0.7] md:scale-[0.85] flex items-center justify-center w-full h-full">
               {/* Glowing 3D Floor Grid */}
               <div
-                className="absolute bottom-[-80px] w-[600px] h-[600px] rounded-full flex items-center justify-center opacity-60 pointer-events-none"
+                className="absolute bottom-[-120px] w-[800px] h-[800px] rounded-full flex items-center justify-center opacity-60 pointer-events-none"
                 style={{ transform: 'rotateX(75deg)' }}
               >
                 <div className="absolute inset-0 rounded-full border border-lime/10 shadow-[inset_0_0_80px_rgba(198,241,53,0.1)]" />
-                <div className="absolute w-[600px] h-[600px] rounded-full border border-lime/20 border-dashed" />
-                <div className="absolute w-[400px] h-[400px] rounded-full border border-lime/30" />
-                <div className="absolute w-[200px] h-[200px] rounded-full border-2 border-lime bg-lime/10 shadow-[0_0_80px_rgba(198,241,53,0.5)]" />
+                <div className="absolute w-[800px] h-[800px] rounded-full border border-lime/20 border-dashed" />
+                <div className="absolute w-[600px] h-[600px] rounded-full border border-lime/30" />
+                <div className="absolute w-[300px] h-[300px] rounded-full border-2 border-lime bg-lime/10 shadow-[0_0_100px_rgba(198,241,53,0.5)]" />
               </div>
 
               {/* Rotating Carousel */}
               <motion.div
                 animate={{ rotateY: [0, -360] }}
-                transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                className="relative w-[300px] h-[400px] flex items-center justify-center"
+                transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+                className="relative w-[340px] h-[550px] flex items-center justify-center"
                 style={{ transformStyle: 'preserve-3d' }}
               >
                 {items.map((c, i) => {
@@ -1203,21 +1229,21 @@ function Features() {
                   return (
                     <div
                       key={c.title}
-                      className="absolute w-[220px] h-[260px] rounded-2xl bg-forest/90 border-2 border-lime/30 shadow-[0_0_30px_rgba(198,241,53,0.15)] backdrop-blur-md p-5 flex flex-col items-center justify-center text-center group transition-colors hover:border-lime hover:shadow-[0_0_50px_rgba(198,241,53,0.5)] backface-hidden"
+                      className="absolute w-[320px] h-[360px] rounded-[1.5rem] bg-forest/90 border-2 border-lime/30 shadow-[0_0_30px_rgba(198,241,53,0.15)] backdrop-blur-md p-8 flex flex-col items-center justify-center text-center group transition-colors hover:border-lime hover:shadow-[0_0_60px_rgba(198,241,53,0.5)] backface-hidden"
                       style={{
-                        transform: `rotateY(${rotateY}deg) translateZ(380px)`,
+                        transform: `rotateY(${rotateY}deg) translateZ(540px)`,
                         backfaceVisibility: 'hidden',
                       }}
                     >
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-forest border border-lime/50 text-lime mb-4 shadow-[0_0_20px_rgba(198,241,53,0.3)] group-hover:scale-110 group-hover:bg-lime group-hover:text-forest transition-all duration-500">
-                        <c.icon className="h-6 w-6" />
+                      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-forest border border-lime/50 mb-6 shadow-[0_0_20px_rgba(198,241,53,0.3)] group-hover:scale-110 group-hover:border-lime group-hover:shadow-[0_0_40px_rgba(198,241,53,0.7)] transition-all duration-500 overflow-hidden shrink-0">
+                        <img src={c.icon} alt={c.title} className="w-14 h-14 object-contain" />
                       </div>
-                      <h3 className="font-display text-lg font-bold text-paper mb-2 group-hover:text-lime transition-colors">{c.title}</h3>
-                      <p className="text-xs text-paper/70 leading-relaxed">{c.desc}</p>
+                      <h3 className="font-display text-xl font-bold text-paper mb-3 group-hover:text-lime transition-colors">{c.title}</h3>
+                      <p className="text-sm text-paper/70 leading-relaxed">{c.desc}</p>
 
                       {/* Decorative corner accents */}
-                      <div className="absolute top-0 left-0 w-6 h-6 border-t-2 border-l-2 border-lime/40 rounded-tl-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute bottom-0 right-0 w-6 h-6 border-b-2 border-r-2 border-lime/40 rounded-br-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-lime/40 rounded-tl-[1.5rem] opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-lime/40 rounded-br-[1.5rem] opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                   );
                 })}
@@ -1238,7 +1264,7 @@ const TESTIMONIALS_DATA = [
     name: "Kathrine Katija",
     role: "Marketing Manager",
     company: "ABC Ad Services",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop",
+    avatar: testi1,
   },
   {
     quote: "Deploying AI models used to take days of infrastructure setup. Now it's a matter of minutes with zero downtime.",
@@ -1246,7 +1272,7 @@ const TESTIMONIALS_DATA = [
     name: "Marcus Vance",
     role: "Lead ML Architect",
     company: "Vertex Grid Systems",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=150&auto=format&fit=crop",
+    avatar: testi2,
   },
   {
     quote: "The deep telemetry logs gave us immediate visibility into token latency and model drift in real time.",
@@ -1254,7 +1280,7 @@ const TESTIMONIALS_DATA = [
     name: "Elena Rostova",
     role: "Head of AI Operations",
     company: "Edge Intelligence",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop",
+    avatar: testi3,
   }
 ];
 
@@ -1293,13 +1319,13 @@ function Testimonials() {
                   key={t.name}
                   onClick={() => setActiveIndex(idx)}
                   className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-105 ${isActive
-                    ? "border-[#E53E3E] shadow-[0_0_20px_rgba(229,62,62,0.4)] scale-110 z-10"
+                    ? "border-[#1A2E22] shadow-[0_0_20px_rgba(26,46,34,0.4)] scale-110 z-10"
                     : "border-transparent opacity-60 hover:opacity-90"
                     }`}
                 >
-                  <img src={t.avatar} alt={t.name} className="w-full h-full object-cover grayscale" width="150" height="150" loading="lazy" />
+                  <img src={t.avatar} alt={t.name} className="w-full h-full object-cover" width="150" height="150" loading="lazy" />
                   {isActive && (
-                    <div className="absolute inset-0 border-2 border-[#E53E3E] rounded-2xl" />
+                    <div className="absolute inset-0 border-2 border-[#1A2E22] rounded-2xl" />
                   )}
                 </button>
               );
@@ -1630,7 +1656,7 @@ function Contact() {
                 </div>
                 <div>
                   <h4 className="text-[#1A2E22] font-bold text-base mb-1">Phone Number</h4>
-                  <p className="text-[#1A2E22]/70 text-sm font-medium">Free +1 (213) 555-2110</p>
+                  <p className="text-[#1A2E22]/70 text-sm font-medium">+1 (213) 555-2110</p>
                 </div>
               </div>
 

@@ -3,12 +3,17 @@ import { motion, AnimatePresence } from "motion/react";
 import { Check, ArrowRight } from "lucide-react";
 import { Reveal, Stagger, fadeUp } from "../ui/animations";
 
+import basicIcon from "../../assets/Basic.svg";
+import standardIcon from "../../assets/Standard.svg";
+import premiumIcon from "../../assets/Premium.svg";
+
 export function Pricing() {
   const [isAnnual, setIsAnnual] = useState(false);
 
   const tiers = [
     {
       name: "Starter",
+      icon: basicIcon,
       priceMonthly: "$49",
       priceAnnually: "$39",
       period: "/mo",
@@ -20,6 +25,7 @@ export function Pricing() {
     },
     {
       name: "Professional",
+      icon: standardIcon,
       priceMonthly: "$199",
       priceAnnually: "$159",
       period: "/mo",
@@ -31,6 +37,7 @@ export function Pricing() {
     },
     {
       name: "Enterprise",
+      icon: premiumIcon,
       priceMonthly: "Custom",
       priceAnnually: "Custom",
       period: "",
@@ -107,7 +114,8 @@ export function Pricing() {
               className="relative bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] flex flex-col pt-0 pb-8 transition-all hover:-translate-y-2 hover:shadow-[0_20px_40px_rgb(0,0,0,0.12)] duration-300 z-0"
             >
               {/* Header Block */}
-              <div className={`relative pt-10 pb-8 rounded-t-[2rem] text-center z-10 ${t.highlight ? 'bg-[#C6F135]' : 'bg-[#F5F3EF]'}`}>
+              <div className={`relative pt-10 pb-8 rounded-t-[2rem] text-center z-10 flex flex-col items-center justify-center ${t.highlight ? 'bg-[#C6F135]' : 'bg-[#F5F3EF]'}`}>
+                <img src={t.icon} alt={t.name} className="w-16 h-16 object-contain mb-4 drop-shadow-sm" />
                 <h3 className={`font-display text-2xl font-bold uppercase tracking-widest text-[#1A2E22]`}>
                   {t.name}
                 </h3>
