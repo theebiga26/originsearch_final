@@ -97,22 +97,25 @@ function Stagger({ children, className }: { children: ReactNode; className?: str
 function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  const [val, setVal] = useState(0);
+  
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || !ref.current) return;
     const controls = animate(0, to, {
       duration,
       ease: "easeOut",
-      onUpdate: (v) => setVal(v),
+      onUpdate: (v) => {
+        if (ref.current) {
+          const display = to >= 100 ? Math.round(v).toLocaleString() : v.toFixed(to % 1 === 0 ? 0 : 2);
+          ref.current.textContent = display + suffix;
+        }
+      },
     });
     return () => controls.stop();
-  }, [inView, to, duration]);
-  const display =
-    to >= 100 ? Math.round(val).toLocaleString() : val.toFixed(to % 1 === 0 ? 0 : 2);
+  }, [inView, to, duration, suffix]);
+  
   return (
     <span ref={ref}>
-      {display}
-      {suffix}
+      0{suffix}
     </span>
   );
 }
@@ -135,37 +138,43 @@ function Nav() {
   ];
 
   useEffect(() => {
+    const linkEls = links.map(l => ({ href: l.href, el: document.querySelector(l.href) as HTMLElement | null }));
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 40);
 
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
-      let currentSection = "";
+          const scrollPosition = window.scrollY + window.innerHeight / 3;
+          let currentSection = "";
 
-      for (const link of links) {
-        const el = document.querySelector(link.href) as HTMLElement;
-        if (el) {
-          if (el.offsetTop <= scrollPosition) {
-            currentSection = link.href;
+          for (const { href, el } of linkEls) {
+            if (el && el.offsetTop <= scrollPosition) {
+              currentSection = href;
+            }
           }
-        }
-      }
 
-      if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight - 50) {
-        currentSection = "#contact";
-      }
+          if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight - 50) {
+            currentSection = "#contact";
+          }
 
-      if (currentSection) setActiveSection(currentSection);
+          if (currentSection && currentSection !== activeSection) {
+            setActiveSection(currentSection);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    const timeout = setTimeout(handleScroll, 500);
-
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearTimeout(timeout);
     };
-  }, []);
+  }, [activeSection]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
