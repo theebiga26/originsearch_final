@@ -30,9 +30,9 @@ export function FAQ() {
       a: "A full REST and gRPC API, plus SDKs for Python, TypeScript, and Go — everything in the UI is available programmatically.",
     },
   ];
-  
+
   const [open, setOpen] = useState<number | null>(0);
-  
+
   return (
     <section id="faq" className="relative py-24 sm:py-32 bg-white">
       <div className="mx-auto max-w-4xl px-5 sm:px-8">
@@ -50,9 +50,8 @@ export function FAQ() {
               <motion.div
                 key={it.q}
                 variants={fadeUp}
-                className={`rounded-2xl border transition-colors ${
-                  isOpen ? "border-forest bg-muted/40" : "border-hairline bg-card"
-                }`}
+                className={`rounded-2xl border transition-colors ${isOpen ? "border-forest bg-muted/40" : "border-hairline bg-card"
+                  }`}
               >
                 <button
                   onClick={() => setOpen(isOpen ? null : i)}

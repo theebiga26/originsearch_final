@@ -2,8 +2,7 @@ import { motion, useInView, animate } from "motion/react";
 import { useRef, useState, useEffect } from "react";
 import { ArrowRight, Cpu, Database, Cloud, Server, Globe, Zap } from "lucide-react";
 import { Reveal, fadeUp, stagger } from "../ui/animations";
-
-const BG_IMAGE = "/hero_bg_circle.png";
+import heroVideo from "../../assets/Hero image.mp4";
 
 /* Icons that orbit around the circular hero image */
 const ORBIT_ICONS = [
@@ -65,40 +64,35 @@ export function Hero() {
               animate="show"
               className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight text-paper max-w-2xl"
             >
-              {["The AI ", "Deployment ", "Platform ", "for ", "Scalable ", "Production ", "Intelligence"].map(
-                (w, i) => (
-                  <motion.span
-                    key={i}
-                    variants={fadeUp}
-                    className={/Deployment|Scalable|Production/.test(w) ? "text-lime" : "text-paper"}
-                  >
-                    {w}
-                  </motion.span>
-                )
-              )}
+              Deploy AI Faster. Scale Without Limits.
             </motion.h1>
           </Reveal>
 
           <Reveal delay={0.2}>
             <p className="mt-6 max-w-xl text-lg text-paper/80 leading-relaxed font-light">
-              Deploy, orchestrate, monitor, and scale AI models across cloud, edge, and hybrid
-              environments with enterprise-grade automation.
+              OriginSearch.one is an AI deployment platform that transforms trained models into
+              production-ready intelligence. Deploy, orchestrate, monitor, and scale AI
+              applications across cloud, edge, and hybrid environments through one intelligent
+              deployment ecosystem.
             </p>
           </Reveal>
 
           <Reveal delay={0.3}>
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <a
-                href="#features"
-                className="inline-flex items-center gap-3 rounded-full bg-paper px-8 py-4 text-sm font-bold text-forest transition-transform hover:scale-105 active:scale-100 shadow-xl"
+                href="#contact"
+                className="inline-flex items-center gap-4 bg-lime hover:bg-[#b5e022] text-forest rounded-full p-2 pl-8 hover:scale-[1.02] active:scale-95 transition-transform shadow-md group max-w-max"
               >
-                See all features <ArrowRight className="h-4 w-4" />
+                <span className="font-bold text-sm">Deploy Your AI</span>
+                <div className="w-10 h-10 rounded-full bg-forest text-lime flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+                  <ArrowRight size={18} strokeWidth={2.5} />
+                </div>
               </a>
               <a
-                href="#contact"
+                href="#features"
                 className="inline-flex items-center gap-3 rounded-full border border-lime/30 px-8 py-4 text-sm font-bold text-lime hover:bg-lime/10 transition-colors"
               >
-                Start Deploying
+                Explore Platform
               </a>
             </div>
           </Reveal>
@@ -125,14 +119,24 @@ export function Hero() {
       {/* Right Column — Circular image with orbiting icons */}
       <div className="w-full lg:w-[40%] h-[400px] lg:h-auto relative z-0 lg:absolute lg:top-0 lg:right-0 lg:bottom-0 flex items-center justify-center">
         {/* Orbit wrapper — centres everything */}
-        <div className="relative" style={{ width: '340px', height: '340px' }}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          whileHover={{ scale: 1.02, rotate: -1 }}
+          className="relative hero-float"
+          style={{ width: '480px', height: '480px' }}
+        >
 
-          {/* Circular image */}
+          {/* Circular video */}
           <div className="absolute inset-0 rounded-full overflow-hidden shadow-2xl ring-2 ring-lime/20">
-            <img
-              src={BG_IMAGE}
-              alt="AI Infrastructure"
-              className="w-full h-full object-cover grayscale contrast-125 brightness-90"
+            <video
+              src={heroVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full object-cover grayscale contrast-125 brightness-90"
             />
             {/* Lime tint overlay */}
             <div className="absolute inset-0 bg-lime/10 mix-blend-overlay" />
@@ -140,13 +144,17 @@ export function Hero() {
 
           {/* Outer glow ring */}
           <div
-            className="absolute rounded-full pointer-events-none"
+            className="absolute rounded-full pointer-events-none hero-glow-pulse"
             style={{
               inset: '-30px',
               border: '1px solid rgba(198,241,53,0.15)',
               boxShadow: '0 0 60px -10px rgba(198,241,53,0.25)',
             }}
           />
+
+          <div className="absolute bottom-6 left-6 rounded-full border border-lime/20 bg-forest/80 px-4 py-2 text-xs font-mono uppercase tracking-[0.28em] text-lime backdrop-blur">
+            24/7 AI Ops
+          </div>
 
           {/* Orbiting icons ring — spins as one group */}
           <div className="hero-orbit-ring">
@@ -159,13 +167,13 @@ export function Hero() {
                   style={{ '--slot-angle': `${angle}deg` } as React.CSSProperties}
                 >
                   <div className="hero-orbit-icon-counter">
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-8 h-8" />
                   </div>
                 </div>
               );
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -5,13 +5,7 @@ import { Radar, ArrowRight, Menu, X } from "lucide-react";
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const [activeSection, setActiveSection] = useState("");
 
   const links = [
     { href: "#home", label: "Home" },
@@ -23,6 +17,43 @@ export function Navbar() {
     { href: "#faq", label: "FAQ" },
     { href: "#contact", label: "Contact" },
   ];
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+
+      // If scrolled to the very bottom, force the last section to be active
+      if (window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight - 50) {
+        setActiveSection("#contact");
+      }
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const sectionElements = links.map(l => document.querySelector(l.href)).filter(Boolean) as Element[];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Only update via observer if we aren't at the very bottom
+            if (window.innerHeight + Math.round(window.scrollY) < document.body.offsetHeight - 50) {
+              setActiveSection(`#${entry.target.id}`);
+            }
+          }
+        });
+      },
+      { rootMargin: "-30% 0px -60% 0px" }
+    );
+
+    sectionElements.forEach((el) => observer.observe(el));
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observer.disconnect();
+    };
+  }, []);
+
+
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
@@ -37,28 +68,35 @@ export function Navbar() {
             : "bg-[rgba(245,243,239,0.82)]"
         } backdrop-blur-[14px] rounded-full`}
       >
-        <div className="flex h-12 items-center justify-between px-4">
+        <div className="flex h-14 items-center justify-between px-4">
           {/* Logo */}
           <a href="#home" className="flex items-center gap-2 group shrink-0">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-forest text-lime shadow-[0_0_12px_rgba(198,241,53,0.3)]">
-              <Radar className="h-3.5 w-3.5" strokeWidth={2.4} />
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-forest text-lime shadow-[0_0_12px_rgba(198,241,53,0.3)]">
+              <Radar className="h-5 w-5" strokeWidth={2.4} />
             </span>
-            <span className="font-display text-[15px] font-bold tracking-tight text-ink">
+            <span className="font-display text-[17px] font-bold tracking-tight text-ink">
               OriginSearch<span className="text-ink-2/70 font-medium">.one</span>
             </span>
           </a>
 
           {/* Desktop Nav Links */}
           <nav className="hidden lg:flex items-center gap-0.5">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="relative px-3 py-1.5 text-[13px] font-medium text-ink/70 hover:text-ink transition-colors rounded-full hover:bg-forest/5 after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-[1.5px] after:bg-lime after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left"
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) => {
+              const isActive = activeSection === l.href;
+              return (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  className={`relative px-3 py-1.5 text-[13px] font-medium transition-colors rounded-full hover:bg-forest/5
+                    ${isActive ? 'text-ink' : 'text-ink/70 hover:text-ink'}
+                    after:content-[''] after:absolute after:left-3 after:right-3 after:-bottom-0.5 after:h-[1.5px] after:bg-lime 
+                    after:transition-transform after:origin-left
+                    ${isActive ? 'after:scale-x-100' : 'after:scale-x-0 hover:after:scale-x-100'}`}
+                >
+                  {l.label}
+                </a>
+              );
+            })}
           </nav>
 
           {/* CTA + Mobile Toggle */}
@@ -90,16 +128,21 @@ export function Navbar() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="pointer-events-auto absolute top-[68px] left-4 right-4 mx-auto max-w-sm bg-[rgba(245,243,239,0.96)] backdrop-blur-[14px] rounded-3xl shadow-[0_20px_50px_-16px_rgba(17,17,17,0.25)] ring-1 ring-black/[0.06] p-4 grid gap-1"
           >
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-2.5 text-sm font-medium text-ink hover:bg-forest hover:text-paper transition-all"
-              >
-                {l.label}
-              </a>
-            ))}
+            {links.map((l) => {
+              const isActive = activeSection === l.href;
+              return (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setOpen(false)}
+                  className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
+                    isActive ? "bg-forest text-paper" : "text-ink hover:bg-forest/10"
+                  }`}
+                >
+                  {l.label}
+                </a>
+              );
+            })}
             <a
               href="#contact"
               onClick={() => setOpen(false)}

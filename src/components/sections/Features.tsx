@@ -38,8 +38,9 @@ export function Features() {
             <motion.div
               key={c.title}
               variants={fadeUp}
-              whileHover={{ y: -8 }}
-              className="group card-dark rounded-2xl p-6 transition-all hover:ring-lime hover:border-lime/40"
+              whileHover={{ y: -8, scale: 1.01 }}
+              transition={{ type: "spring", stiffness: 220, damping: 18 }}
+              className="group card-dark rounded-2xl p-6 feature-hover-card hover:ring-lime hover:border-lime/40"
             >
               <motion.span
                 whileHover={{ rotate: 8, scale: 1.08 }}
