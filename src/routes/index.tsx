@@ -702,7 +702,7 @@ function About() {
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute top-8 left-0 w-2/3 h-[250px] sm:h-[320px] z-10 flex items-center justify-center p-4"
               >
-                <img src={about1} alt="About OriginSearch 1" className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105 drop-shadow-2xl" width="600" height="400" loading="lazy" />
+                <img src={about1} alt="About OriginSearch 1" className="w-full h-full object-contain rounded-3xl transform transition-transform duration-700 hover:scale-105 drop-shadow-2xl" width="600" height="400" loading="lazy" />
               </motion.div>
 
               {/* Overlapping bottom-right image */}
@@ -711,7 +711,7 @@ function About() {
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 className="absolute bottom-0 right-4 w-3/5 h-[200px] sm:h-[260px] z-20 flex items-center justify-center p-4"
               >
-                <img src={about2} alt="About OriginSearch 2" className="w-full h-full object-contain transform transition-transform duration-700 hover:scale-105 drop-shadow-2xl" width="600" height="400" loading="lazy" />
+                <img src={about2} alt="About OriginSearch 2" className="w-full h-full object-contain rounded-3xl transform transition-transform duration-700 hover:scale-105 drop-shadow-2xl" width="600" height="400" loading="lazy" />
               </motion.div>
             </Reveal>
           </div>
@@ -1184,9 +1184,9 @@ function Features() {
     { icon: featSecurityIcon, title: "Enterprise Security", desc: "Support secure deployment pipelines with controlled access, deployment validation, and enterprise-ready operational governance." },
   ];
   return (
-    <section id="features" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-12 sm:pb-24">
+    <section id="features" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-4 sm:pb-8">
       {/* Dark background matching exactly the Hero section's width and border radius */}
-      <div className="relative w-full bg-forest rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl py-8 sm:py-10 text-paper">
+      <div className="relative w-full bg-forest rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden py-8 sm:py-10 text-paper">
         <div className="absolute inset-0 bg-grid-dark opacity-40 pointer-events-none" />
         <div className="absolute top-0 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-lime/5 blur-[100px] pointer-events-none" />
 
@@ -1295,7 +1295,7 @@ function Testimonials() {
   }, []);
 
   return (
-    <section id="testimonials" className="relative py-10 sm:py-12 bg-[#F5F3EF] overflow-hidden">
+    <section id="testimonials" className="relative pt-4 pb-10 sm:pt-6 sm:pb-12 bg-[#F5F3EF] overflow-hidden">
       <div className="mx-auto max-w-5xl px-5 sm:px-8">
 
         {/* Section Title */}
@@ -1318,7 +1318,7 @@ function Testimonials() {
                 <button
                   key={t.name}
                   onClick={() => setActiveIndex(idx)}
-                  className={`relative w-20 h-28 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-105 ${isActive
+                  className={`relative w-24 h-32 rounded-2xl overflow-hidden border-2 transition-all duration-500 hover:scale-105 shrink-0 ${isActive
                     ? "border-[#1A2E22] shadow-[0_0_20px_rgba(26,46,34,0.4)] scale-110 z-10"
                     : "border-transparent opacity-60 hover:opacity-90"
                     }`}
