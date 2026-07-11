@@ -958,7 +958,7 @@ function HowItWorks() {
                         <div className="absolute inset-0 bg-[#24382C] rounded-full"></div>
                         <span className="font-display text-3xl font-black relative z-10 text-white">{s.num}</span>
                       </div>
-                      <img src={s.icon} alt={s.title} className="w-16 h-16 object-contain drop-shadow-md mix-blend-multiply" />
+                      <img src={s.icon} alt={s.title} className="w-16 h-16 object-contain drop-shadow-md mix-blend-multiply" loading="lazy" />
                     </div>
                     <div className="relative z-10">
                       <h4 className="font-display font-bold text-xl mb-3">{s.title}</h4>
@@ -998,7 +998,7 @@ function HowItWorks() {
                             style={{ backgroundColor: s.diamondBg }}
                           >
                             <div className="-rotate-45 group-hover:-rotate-[135deg] transition-transform duration-500">
-                              <img src={s.icon} alt={s.title} className="w-12 h-12 object-contain mix-blend-multiply" />
+                              <img src={s.icon} alt={s.title} className="w-12 h-12 object-contain mix-blend-multiply" loading="lazy" />
                             </div>
                           </div>
 
@@ -1892,15 +1892,23 @@ function CookieConsent() {
 /* ---------- Tawk.to Chat ---------- */
 function TawkChat() {
   useEffect(() => {
-    if (document.getElementById('tawk-script')) return;
-    const s1 = document.createElement("script");
-    const s0 = document.getElementsByTagName("script")[0];
-    s1.async = true;
-    s1.src = 'https://embed.tawk.to/65c3b9b40ff6390009139f7a/1hlvbfd9o'; // Example/Placeholder ID
-    s1.charset = 'UTF-8';
-    s1.setAttribute('crossorigin', '*');
-    s1.id = 'tawk-script';
-    s0?.parentNode?.insertBefore(s1, s0);
+    const timer = setTimeout(() => {
+      if (document.getElementById('tawk-script')) return;
+      const s1 = document.createElement("script");
+      const s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = 'https://embed.tawk.to/65c3b9b40ff6390009139f7a/1hlvbfd9o'; // Example/Placeholder ID
+      s1.charset = 'UTF-8';
+      s1.setAttribute('crossorigin', '*');
+      s1.id = 'tawk-script';
+      if (s0?.parentNode) {
+        s0.parentNode.insertBefore(s1, s0);
+      } else {
+        document.body.appendChild(s1);
+      }
+    }, 5000); // Delay by 5 seconds to prioritize page load
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return null;
