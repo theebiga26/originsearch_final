@@ -1556,6 +1556,50 @@ function CTA() {
   );
 }
 
+/* ---------- Cloudflare Turnstile ---------- */
+function TurnstileWidget({ siteKey }: { siteKey: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadTurnstile = () => {
+      const turnstile = (window as any).turnstile;
+      if (turnstile && containerRef.current) {
+        // Clear any existing widget first
+        containerRef.current.innerHTML = '';
+        turnstile.render(containerRef.current, {
+          sitekey: siteKey,
+          theme: 'light',
+        });
+      }
+    };
+
+    if ((window as any).turnstile) {
+      loadTurnstile();
+    } else {
+      const scriptId = 'cf-turnstile-script';
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement('script');
+        script.id = scriptId;
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+        script.async = true;
+        script.defer = true;
+        script.onload = loadTurnstile;
+        document.head.appendChild(script);
+      } else {
+        // Script is loading, wait for it
+        const checkInterval = setInterval(() => {
+          if ((window as any).turnstile) {
+            clearInterval(checkInterval);
+            loadTurnstile();
+          }
+        }, 100);
+      }
+    }
+  }, [siteKey]);
+
+  return <div ref={containerRef} className="mt-2 min-h-[65px]" />;
+}
+
 /* ---------- Contact ---------- */
 function Contact() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -1605,18 +1649,20 @@ function Contact() {
               className="space-y-4"
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input required name="name" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Name" />
-                <input required name="email" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Email" type="email" />
+                <input required name="name" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Name" />
+                <input required name="email" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Email" type="email" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input required name="subject" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Subject" />
-                <input name="phone" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Phone" type="tel" />
+                <input required name="subject" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Subject" />
+                <input name="phone" className="w-full rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Phone" type="tel" />
               </div>
 
               <div>
-                <textarea required name="message" rows={6} className="w-full resize-none rounded-none border border-[#1A2E22] bg-white px-6 py-5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Message" />
+                <textarea required name="message" rows={5} className="w-full resize-none rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Message" />
               </div>
+              
+              <TurnstileWidget siteKey="0x4AAAAAADzs2UKqvY6f93cm" />
 
               <div className="pt-4 flex flex-wrap items-center gap-4">
                 <button 
@@ -1651,7 +1697,7 @@ function Contact() {
 
             <div className="space-y-6">
               {/* Block 1 */}
-              <div className="flex items-center gap-6 group cursor-default">
+              <a href="tel:+12135552110" className="flex items-center gap-6 group cursor-pointer">
                 <div className="relative flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110 shadow-lg">
                   {/* Offset shadow (Lime) */}
                   <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1.5 translate-y-1.5"></div>
@@ -1663,10 +1709,10 @@ function Contact() {
                   <h4 className="text-[#1A2E22] font-bold text-base mb-1">Phone Number</h4>
                   <p className="text-[#1A2E22]/70 text-sm font-medium">+1 (213) 555-2110</p>
                 </div>
-              </div>
+              </a>
 
               {/* Block 2 */}
-              <div className="flex items-center gap-6 group cursor-default">
+              <a href="mailto:info@originsearch.one" className="flex items-center gap-6 group cursor-pointer">
                 <div className="relative flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110 shadow-lg">
                   {/* Offset shadow (Lime) */}
                   <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1.5 translate-y-1.5"></div>
@@ -1678,10 +1724,10 @@ function Contact() {
                   <h4 className="text-[#1A2E22] font-bold text-base mb-1">Email Address</h4>
                   <p className="text-[#1A2E22]/70 text-sm font-medium">info@originsearch.one</p>
                 </div>
-              </div>
+              </a>
 
               {/* Block 3 */}
-              <div className="flex items-center gap-6 group cursor-default">
+              <a href="https://www.google.com/maps/search/?api=1&query=601+W+5th+Street,+Los+Angeles" target="_blank" rel="noopener noreferrer" className="flex items-center gap-6 group cursor-pointer">
                 <div className="relative flex-shrink-0 w-16 h-16 rounded-full flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110 shadow-lg">
                   {/* Offset shadow (Lime) */}
                   <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1.5 translate-y-1.5"></div>
@@ -1693,7 +1739,7 @@ function Contact() {
                   <h4 className="text-[#1A2E22] font-bold text-base mb-1">Address</h4>
                   <p className="text-[#1A2E22]/70 text-sm font-medium">601 W 5th Street, Los Angeles</p>
                 </div>
-              </div>
+              </a>
             </div>
           </Reveal>
         </div>
