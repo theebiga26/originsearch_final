@@ -7,10 +7,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Preloader } from "../components/ui/Preloader";
 
 function NotFoundComponent() {
   return (
@@ -154,9 +155,23 @@ if(s0) s0.parentNode.insertBefore(s1,s0); else document.body.appendChild(s1);
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const [showPreloader, setShowPreloader] = useState(false);
+
+  useEffect(() => {
+    const hasPreloaded = sessionStorage.getItem("originsearch_preloaded");
+    if (!hasPreloaded) {
+      setShowPreloader(true);
+    }
+  }, []);
+
+  const handlePreloaderComplete = () => {
+    setShowPreloader(false);
+    sessionStorage.setItem("originsearch_preloaded", "true");
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
+      {showPreloader && <Preloader onComplete={handlePreloaderComplete} />}
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
