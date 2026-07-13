@@ -649,6 +649,21 @@ function About() {
   return (
     <section id="about" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-6 sm:pb-8">
       <div className="relative w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden py-16 sm:py-24">
+        
+        {/* Tech Geometric Traces (Left Edge) */}
+        <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
+          <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
+            {/* Top Tech Pattern */}
+            <path d="M -50,50 L 120,220 L -50,390" />
+            <path d="M 20,-50 L 180,110 L 20,270" />
+            <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
+            
+            {/* Bottom Tech Pattern */}
+            <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
+            <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
+            <path d="M 140,760 L 250,870" />
+          </svg>
+        </div>
 
         {/* Animated Perspective Grid Background */}
         <PerspectiveGridCanvas />
@@ -934,6 +949,21 @@ function HowItWorks() {
     <section id="how" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-4 sm:pb-8">
       {/* Dark background matching exactly the Hero section's width and border radius */}
       <div className="relative w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl py-10 sm:py-12">
+        
+        {/* Tech Geometric Traces (Left Edge) */}
+        <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
+          <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
+            {/* Top Tech Pattern */}
+            <path d="M -50,50 L 120,220 L -50,390" />
+            <path d="M 20,-50 L 180,110 L 20,270" />
+            <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
+            
+            {/* Bottom Tech Pattern */}
+            <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
+            <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
+            <path d="M 140,760 L 250,870" />
+          </svg>
+        </div>
 
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8 relative z-10">
           <Reveal className="max-w-3xl mx-auto text-center">
@@ -1190,6 +1220,21 @@ function Features() {
       <div className="relative w-full bg-forest rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden py-8 sm:py-10 text-paper">
         <div className="absolute inset-0 bg-grid-dark opacity-40 pointer-events-none" />
         <div className="absolute top-0 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-lime/5 blur-[100px] pointer-events-none" />
+
+        {/* Tech Geometric Traces (Left Edge) */}
+        <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
+          <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
+            {/* Top Tech Pattern */}
+            <path d="M -50,50 L 120,220 L -50,390" />
+            <path d="M 20,-50 L 180,110 L 20,270" />
+            <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
+            
+            {/* Bottom Tech Pattern */}
+            <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
+            <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
+            <path d="M 140,760 L 250,870" />
+          </svg>
+        </div>
 
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8 z-10">
           <Reveal className="max-w-3xl mx-auto text-center">
@@ -1784,7 +1829,7 @@ function Footer() {
     },
     {
       label: "Twitter / X",
-      href: "#",
+      href: "https://x.com/OriginSearchAi",
       svg: (
         <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
