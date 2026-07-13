@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Check, ArrowRight } from "lucide-react";
 import { Reveal, Stagger, fadeUp } from "../ui/animations";
+import { PerspectiveGridCanvas } from "../../routes/index";
 
 import basicIcon from "../../assets/Basic.svg";
 import standardIcon from "../../assets/Standard.svg";
@@ -58,25 +59,23 @@ export function Pricing() {
     <section id="pricing" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-12 sm:pb-24">
       <div className="relative w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl py-16 sm:py-20">
         
-        {/* Abstract Background Lines */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.15] z-0">
-          <svg className="w-full h-full text-white" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" stroke="currentColor">
-            <pattern id="pricing-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" strokeWidth="0.5" strokeOpacity="0.3" />
-            </pattern>
-            <rect width="100%" height="100%" fill="url(#pricing-grid)" stroke="none" />
-            <path d="M-100 150 Q 350 350 750 150 T 1500 200" strokeWidth="1.5" strokeOpacity="0.7" />
-            <path d="M-100 170 Q 350 370 750 170 T 1500 220" strokeWidth="1" strokeOpacity="0.4" />
-            <path d="M-100 190 Q 350 390 750 190 T 1500 240" strokeWidth="0.5" strokeOpacity="0.2" />
+        {/* Tech Geometric Traces (Left Edge) */}
+        <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
+          <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
+            {/* Top Tech Pattern */}
+            <path d="M -50,50 L 120,220 L -50,390" />
+            <path d="M 20,-50 L 180,110 L 20,270" />
+            <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
+            
+            {/* Bottom Tech Pattern */}
+            <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
+            <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
+            <path d="M 140,760 L 250,870" />
           </svg>
         </div>
 
-        {/* Decorative Floating Blobs */}
-        <div className="absolute top-[15%] -left-4 w-16 h-20 bg-[#C6F135] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] rotate-12 z-0" />
-        <div className="absolute top-[45%] left-8 w-12 h-14 bg-[#C6F135] rounded-[60%_40%_30%_70%/60%_30%_70%_40%] -rotate-12 z-0" />
-        <div className="absolute bottom-[20%] -left-6 w-20 h-24 bg-[#C6F135] rounded-[50%_50%_30%_70%/30%_70%_50%_50%] rotate-45 z-0" />
-        <div className="absolute top-[25%] -right-8 w-24 h-24 bg-[#C6F135] rounded-[30%_70%_70%_30%/30%_30%_70%_70%] rotate-[-20deg] opacity-70 z-0" />
-        <div className="absolute bottom-[10%] right-6 w-10 h-12 bg-[#C6F135] rounded-[70%_30%_50%_50%/70%_50%_50%_30%] rotate-12 opacity-80 z-0" />
+        {/* Animated Perspective Grid Background */}
+        <PerspectiveGridCanvas />
 
         <div className="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
           <Reveal className="max-w-3xl text-center mx-auto">

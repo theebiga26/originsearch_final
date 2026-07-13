@@ -349,8 +349,26 @@ function Hero() {
       {/* Main Dark Container */}
       <div className="relative w-full bg-forest rounded-[2.5rem] sm:rounded-[3.5rem] overflow-visible flex flex-col lg:flex-row items-center min-h-[70vh]">
 
+        {/* Background Layer to contain grid/traces without clipping foreground */}
+        <div className="absolute inset-0 rounded-[inherit] overflow-hidden pointer-events-none z-0">
+          {/* Tech Geometric Traces (Left Edge) */}
+          <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
+            <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
+              <path d="M -50,50 L 120,220 L -50,390" />
+              <path d="M 20,-50 L 180,110 L 20,270" />
+              <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
+              <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
+              <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
+              <path d="M 140,760 L 250,870" />
+            </svg>
+          </div>
+
+          {/* Animated Perspective Grid Background */}
+          <PerspectiveGridCanvas />
+        </div>
+
         {/* Background glow for the image */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/20 blur-[120px] rounded-full pointer-events-none z-0" />
 
         {/* Left Column (Content) */}
         <div className="w-full lg:w-[55%] z-10 px-8 sm:px-16 lg:px-24 pt-16 pb-44 lg:pb-40">
@@ -518,7 +536,7 @@ function StatsBar() {
 }
 
 /* ---------- PerspectiveGridCanvas ---------- */
-function PerspectiveGridCanvas() {
+export function PerspectiveGridCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -965,6 +983,9 @@ function HowItWorks() {
           </svg>
         </div>
 
+        {/* Animated Perspective Grid Background */}
+        <PerspectiveGridCanvas />
+
         <div className="mx-auto max-w-[1200px] px-5 sm:px-8 relative z-10">
           <Reveal className="max-w-3xl mx-auto text-center">
             <span className="font-mono text-xs uppercase tracking-widest text-lime">
@@ -1235,6 +1256,9 @@ function Features() {
             <path d="M 140,760 L 250,870" />
           </svg>
         </div>
+
+        {/* Animated Perspective Grid Background */}
+        <PerspectiveGridCanvas />
 
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8 z-10">
           <Reveal className="max-w-3xl mx-auto text-center">
