@@ -124,7 +124,7 @@ function Stagger({ children, className }: { children: ReactNode; className?: str
 function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
-  
+
   useEffect(() => {
     if (!inView || !ref.current) return;
     const controls = animate(0, to, {
@@ -139,7 +139,7 @@ function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: strin
     });
     return () => controls.stop();
   }, [inView, to, duration, suffix]);
-  
+
   return (
     <span ref={ref}>
       0{suffix}
@@ -197,7 +197,7 @@ function Nav() {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -243,10 +243,10 @@ function Nav() {
           {/* CTA + Toggle */}
           <div className="flex items-center gap-2 shrink-0">
             <a href="#contact" className="hidden sm:inline-flex items-center gap-3 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-1.5 pl-5 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_6px_20px_-6px_rgba(198,241,53,0.65)] group">
-               <span className="font-semibold text-[13px]">Get Started</span>
-               <div className="w-7 h-7 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
-                  <ArrowRight size={14} strokeWidth={2.5} />
-               </div>
+              <span className="font-semibold text-[13px]">Get Started</span>
+              <div className="w-7 h-7 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+                <ArrowRight size={14} strokeWidth={2.5} />
+              </div>
             </a>
             <button
               className="lg:hidden grid h-8 w-8 place-items-center rounded-full border border-hairline text-ink hover:bg-muted transition-colors"
@@ -275,9 +275,8 @@ function Nav() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${
-                  isActive ? "bg-forest text-paper" : "text-ink hover:bg-forest/10"
-                }`}
+                className={`rounded-xl px-4 py-2.5 text-sm font-medium transition-all ${isActive ? "bg-forest text-paper" : "text-ink hover:bg-forest/10"
+                  }`}
               >
                 {l.label}
               </a>
@@ -288,10 +287,10 @@ function Nav() {
             onClick={() => setOpen(false)}
             className="mt-1 flex items-center justify-between bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-2 pl-6 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_4px_16px_-4px_rgba(198,241,53,0.5)] group"
           >
-             <span className="font-semibold text-sm">Get Started</span>
-             <div className="w-8 h-8 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
-                <ArrowRight size={16} strokeWidth={2.5} />
-             </div>
+            <span className="font-semibold text-sm">Get Started</span>
+            <div className="w-8 h-8 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+              <ArrowRight size={16} strokeWidth={2.5} />
+            </div>
           </a>
         </motion.div>
       )}
@@ -412,10 +411,10 @@ function Hero() {
           <Reveal delay={0.3}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a href="#contact" className="inline-flex items-center gap-4 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-2 pl-8 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_20px_50px_-16px_rgba(198,241,53,0.4)] group max-w-max pointer-events-auto">
-                 <span className="font-bold text-sm">Get Started</span>
-                 <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
-                    <ArrowRight size={18} strokeWidth={2.5} />
-                 </div>
+                <span className="font-bold text-sm">Get Started</span>
+                <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+                  <ArrowRight size={18} strokeWidth={2.5} />
+                </div>
               </a>
             </div>
           </Reveal>
@@ -667,7 +666,7 @@ function About() {
   return (
     <section id="about" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-6 sm:pb-8">
       <div className="relative w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden py-16 sm:py-24">
-        
+
         {/* Tech Geometric Traces (Left Edge) */}
         <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
           <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
@@ -675,7 +674,7 @@ function About() {
             <path d="M -50,50 L 120,220 L -50,390" />
             <path d="M 20,-50 L 180,110 L 20,270" />
             <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
-            
+
             {/* Bottom Tech Pattern */}
             <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
             <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
@@ -967,7 +966,7 @@ function HowItWorks() {
     <section id="how" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pt-4 pb-4 sm:pb-8">
       {/* Dark background matching exactly the Hero section's width and border radius */}
       <div className="relative w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl py-10 sm:py-12">
-        
+
         {/* Tech Geometric Traces (Left Edge) */}
         <div className="absolute top-0 left-[-5%] w-[350px] h-full pointer-events-none z-0 opacity-90">
           <svg className="w-full h-full text-[#C6F135]" viewBox="0 0 200 800" fill="none" stroke="currentColor" strokeWidth="32" strokeLinejoin="round" strokeLinecap="round">
@@ -975,7 +974,7 @@ function HowItWorks() {
             <path d="M -50,50 L 120,220 L -50,390" />
             <path d="M 20,-50 L 180,110 L 20,270" />
             <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
-            
+
             {/* Bottom Tech Pattern */}
             <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
             <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
@@ -1161,7 +1160,7 @@ function TargetUsers() {
           <div className="relative flex items-center justify-center h-[350px] sm:h-[400px] lg:h-[500px] w-full mt-10 lg:mt-0">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-[0.55] sm:scale-75 lg:scale-100 w-[600px] h-[600px] flex items-center justify-center">
               {/* Background Orbits */}
-              <motion.div 
+              <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
                 className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80"
@@ -1203,8 +1202,20 @@ function TargetUsers() {
                     className="absolute left-1/2 top-1/2 z-20 group cursor-default"
                   >
                     {/* Icon perfectly centered on the coordinate */}
-                    <div className="absolute -left-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-forest border-2 border-lime/30 shadow-[0_0_15px_rgba(26,46,34,0.1)] text-lime group-hover:border-lime group-hover:bg-lime group-hover:text-forest group-hover:shadow-[0_0_20px_rgba(198,241,53,0.4)] group-hover:scale-110 transition-all duration-300 overflow-hidden">
-                      <img src={user.icon} alt={user.role} className="w-8 h-8 object-contain scale-95" width="32" height="32" loading="lazy" />
+                    <div className="absolute -left-6 -top-6 flex h-12 w-12 items-center justify-center rounded-full bg-forest border-2 border-lime/30 shadow-[0_0_15px_rgba(26,46,34,0.1)] group-hover:border-lime group-hover:bg-lime group-hover:shadow-[0_0_20px_rgba(198,241,53,0.4)] group-hover:scale-110 transition-all duration-300 overflow-hidden">
+                      <div 
+                        className="w-8 h-8 bg-lime group-hover:bg-forest transition-colors duration-300" 
+                        style={{ 
+                          WebkitMaskImage: `url(${user.icon})`,
+                          WebkitMaskSize: 'contain',
+                          WebkitMaskRepeat: 'no-repeat',
+                          WebkitMaskPosition: 'center',
+                          maskImage: `url(${user.icon})`,
+                          maskSize: 'contain',
+                          maskRepeat: 'no-repeat',
+                          maskPosition: 'center'
+                        }} 
+                      />
                     </div>
 
                     {/* Text box offset to the side */}
@@ -1249,7 +1260,7 @@ function Features() {
             <path d="M -50,50 L 120,220 L -50,390" />
             <path d="M 20,-50 L 180,110 L 20,270" />
             <path d="M -50,-50 L 80,80 L -50,210" fill="currentColor" stroke="none" />
-            
+
             {/* Bottom Tech Pattern */}
             <path d="M -50,550 L 100,700 L 40,760 L 150,870" />
             <path d="M 20,650 L 80,710 L -50,840" fill="currentColor" stroke="none" />
@@ -1490,13 +1501,13 @@ function FAQ() {
   return (
     <section id="faq" className="relative bg-[#F5F3EF] py-16 sm:py-24 border-b border-[#1A2E22]/10 overflow-hidden">
       <div className="mx-auto max-w-7xl px-5 sm:px-8 relative">
-        
+
         {/* Giant Question Mark Graphic */}
-        <div 
+        <div
           className="absolute top-0 right-0 opacity-10 pointer-events-none text-[16rem] md:text-[18rem] lg:text-[20rem] font-display font-black leading-none select-none text-transparent -mt-16 md:-mt-24 lg:-mt-28 -mr-6 md:mr-4 lg:mr-12"
           style={{ WebkitTextStroke: '3px #1A2E22' }}
         >
-           ?
+          ?
         </div>
 
         <div className="relative z-10 mb-16">
@@ -1508,7 +1519,7 @@ function FAQ() {
               Frequently <span className="text-lime">Asked Questions</span>
             </h2>
             <p className="text-[#4B5563] mb-10 text-sm sm:text-base leading-relaxed max-w-lg">
-               Find quick answers to common questions below. Need more help? Contact us anytime for further assistance!
+              Find quick answers to common questions below. Need more help? Contact us anytime for further assistance!
             </p>
           </Reveal>
         </div>
@@ -1518,42 +1529,42 @@ function FAQ() {
             const isOpen = open === i;
             return (
               <div key={it.q} className="flex flex-col">
-                 <button
-                   onClick={() => setOpen(isOpen ? null : i)}
-                   aria-expanded={isOpen}
-                   className="flex w-full items-center gap-4 p-2 sm:p-3 text-left group bg-white hover:bg-[#F5F3EF] rounded-xl transition-colors border border-[#1A2E22] shadow-sm hover:shadow-md"
-                 >
-                   <div className="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110 shadow-sm">
-                     {/* Offset shadow (Lime) */}
-                     <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1 translate-y-1"></div>
-                     {/* Main background (Dark Green) */}
-                     <div className="absolute inset-0 bg-[#1A2E22] rounded-full"></div>
-                     <span className="relative z-10 font-display font-black text-xl text-white group-hover:text-[#C6F135] transition-colors duration-300">
-                       {i + 1}
-                     </span>
-                   </div>
-                   
-                   <span className={`flex-1 font-display text-base sm:text-lg font-bold transition-colors ${isOpen ? 'text-[#1A2E22]' : 'text-[#1A2E22]/80 group-hover:text-[#1A2E22]'}`}>
-                     {it.q}
-                   </span>
-                   
-                   <span className="shrink-0 text-3xl font-light text-[#1A2E22] leading-none opacity-50 px-4 group-hover:opacity-100 transition-opacity">
-                     {isOpen ? "×" : "+"}
-                   </span>
-                 </button>
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center gap-4 p-2 sm:p-3 text-left group bg-white hover:bg-[#F5F3EF] rounded-xl transition-colors border border-[#1A2E22] shadow-sm hover:shadow-md"
+                >
+                  <div className="relative flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center z-10 transition-transform duration-500 group-hover:scale-110 shadow-sm">
+                    {/* Offset shadow (Lime) */}
+                    <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1 translate-y-1"></div>
+                    {/* Main background (Dark Green) */}
+                    <div className="absolute inset-0 bg-[#1A2E22] rounded-full"></div>
+                    <span className="relative z-10 font-display font-black text-xl text-white group-hover:text-[#C6F135] transition-colors duration-300">
+                      {i + 1}
+                    </span>
+                  </div>
 
-                 <motion.div
-                   initial={false}
-                   animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                   className="overflow-hidden"
-                 >
-                   <div className="pl-16 sm:pl-22 pr-6 pb-6 pt-4">
-                     <p className="text-sm sm:text-base text-[#1A2E22]/80 leading-relaxed font-medium">
-                       {it.a}
-                     </p>
-                   </div>
-                 </motion.div>
+                  <span className={`flex-1 font-display text-base sm:text-lg font-bold transition-colors ${isOpen ? 'text-[#1A2E22]' : 'text-[#1A2E22]/80 group-hover:text-[#1A2E22]'}`}>
+                    {it.q}
+                  </span>
+
+                  <span className="shrink-0 text-3xl font-light text-[#1A2E22] leading-none opacity-50 px-4 group-hover:opacity-100 transition-opacity">
+                    {isOpen ? "×" : "+"}
+                  </span>
+                </button>
+
+                <motion.div
+                  initial={false}
+                  animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="pl-16 sm:pl-22 pr-6 pb-6 pt-4">
+                    <p className="text-sm sm:text-base text-[#1A2E22]/80 leading-relaxed font-medium">
+                      {it.a}
+                    </p>
+                  </div>
+                </motion.div>
               </div>
             );
           })}
@@ -1563,10 +1574,10 @@ function FAQ() {
         <div className="mt-12 flex justify-end relative z-10">
           <Reveal delay={0.2}>
             <a href="#contact" className="inline-flex items-center gap-4 bg-[#C6F135] text-[#1A2E22] rounded-full p-2 pl-8 hover:scale-[1.02] active:scale-95 transition-transform shadow-md group">
-               <span className="font-bold text-sm">Book a Free Call</span>
-               <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
-                  <ArrowRight size={18} strokeWidth={2.5} />
-               </div>
+              <span className="font-bold text-sm">Book a Free Call</span>
+              <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </div>
             </a>
           </Reveal>
         </div>
@@ -1580,26 +1591,26 @@ function FAQ() {
 function CTA() {
   return (
     <section id="cta" className="relative bg-[#F5F3EF] px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24 pt-24 sm:pt-32">
-      <div 
+      <div
         className="w-full relative z-10 bg-[#1A2E22] rounded-[2rem] sm:rounded-[3.5rem] shadow-2xl flex flex-col md:flex-row items-stretch bg-cover bg-center"
         style={{ backgroundImage: `url(${ctaBg})` }}
       >
-        
+
 
         {/* Left Side Content */}
         <div className="flex-1 py-10 px-6 sm:py-14 sm:pl-20 sm:pr-12 lg:py-16 lg:pl-28 lg:pr-16 relative z-10 flex flex-col justify-center">
           <Reveal>
             <h2 className="font-display text-3xl sm:text-4xl lg:text-4xl font-bold text-[#F5F3EF] leading-tight mb-5">
-              Start Your <span className="text-[#C6F135]">AI Journey</span><br/> with OriginSearch Today!
+              Start Your <span className="text-[#C6F135]">AI Journey</span><br /> with OriginSearch Today!
             </h2>
             <p className="text-[#F5F3EF]/90 text-sm sm:text-base mb-8 leading-relaxed pr-4 md:pr-0 font-medium">
               Deploy, manage, and scale your AI models in minutes. Experience the unified platform built for modern enterprise workloads.
             </p>
             <a href="#contact" className="inline-flex items-center gap-4 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-2 pl-8 hover:scale-[1.02] active:scale-95 transition-transform shadow-md group max-w-max pointer-events-auto">
-               <span className="font-bold text-sm">Discover more</span>
-               <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
-                  <ArrowRight size={18} strokeWidth={2.5} />
-               </div>
+              <span className="font-bold text-sm">Discover more</span>
+              <div className="w-10 h-10 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
+                <ArrowRight size={18} strokeWidth={2.5} />
+              </div>
             </a>
           </Reveal>
         </div>
@@ -1609,9 +1620,9 @@ function CTA() {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-4 lg:right-8 w-full max-w-[450px] md:w-auto md:max-w-none h-[125%] md:h-[135%] flex justify-center md:justify-end items-end z-20">
             {/* Subtle lime glow behind the image */}
             <div className="absolute bottom-0 right-1/4 w-[200px] h-[200px] bg-[#C6F135]/20 blur-[60px] rounded-full pointer-events-none" />
-            <img 
-              src={ctaTeam} 
-              alt="OriginSearch Engineering Team" 
+            <img
+              src={ctaTeam}
+              alt="OriginSearch Engineering Team"
               className="relative z-10 w-auto h-full object-contain object-bottom drop-shadow-2xl"
               width="800"
               height="600"
@@ -1730,21 +1741,21 @@ function Contact() {
               <div>
                 <textarea required name="message" rows={5} className="w-full resize-none rounded-none border border-[#1A2E22] bg-white px-6 py-3.5 text-sm text-[#111111] outline-none focus:ring-2 focus:ring-[#C6F135] transition-all placeholder:text-[#1A2E22]/50 font-medium" placeholder="Enter Message" />
               </div>
-              
+
               <TurnstileWidget siteKey="0x4AAAAAADzs2UKqvY6f93cm" />
 
               <div className="pt-4 flex flex-wrap items-center gap-4">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={status === "sending"}
                   className={`inline-flex items-center gap-4 text-[#1A2E22] rounded-full p-2 pl-8 transition-transform shadow-md group ${status === "sending" ? "bg-[#e5e7eb] opacity-70 cursor-not-allowed" : "bg-[#C6F135] hover:scale-[1.02] active:scale-95"}`}
                 >
-                   <span className="font-bold text-sm uppercase tracking-wider">
-                     {status === "sending" ? "Sending..." : status === "sent" ? "Sent Successfully" : status === "error" ? "Error, Try Again" : "Send Message"}
-                   </span>
-                   <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-inner transition-colors ${status === "sending" ? "bg-gray-400 text-white" : "bg-[#1A2E22] text-[#C6F135] group-hover:bg-black"}`}>
-                      <ArrowRight size={18} strokeWidth={2.5} />
-                   </div>
+                  <span className="font-bold text-sm uppercase tracking-wider">
+                    {status === "sending" ? "Sending..." : status === "sent" ? "Sent Successfully" : status === "error" ? "Error, Try Again" : "Send Message"}
+                  </span>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-inner transition-colors ${status === "sending" ? "bg-gray-400 text-white" : "bg-[#1A2E22] text-[#C6F135] group-hover:bg-black"}`}>
+                    <ArrowRight size={18} strokeWidth={2.5} />
+                  </div>
                 </button>
               </div>
             </form>
@@ -2023,7 +2034,7 @@ function TawkChat() {
       } else {
         document.body.appendChild(s1);
       }
-      
+
       // Remove event listeners once loaded
       ['scroll', 'mousemove', 'touchstart', 'keydown'].forEach(event => {
         window.removeEventListener(event, loadTawk);
