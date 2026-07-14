@@ -30,7 +30,10 @@ export function Navbar() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
 
-    const sectionElements = links.map(l => document.querySelector(l.href)).filter(Boolean) as Element[];
+    const sectionElements = links
+      .filter(l => l.href.startsWith('#'))
+      .map(l => document.querySelector(l.href))
+      .filter(Boolean) as Element[];
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -102,10 +105,10 @@ export function Navbar() {
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-2 shrink-0">
             <a
-              href="#contact"
+              href="/products"
               className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-lime px-4 py-1.5 text-[13px] font-semibold text-forest transition-transform hover:scale-105 active:scale-100 shadow-[0_6px_20px_-6px_rgba(198,241,53,0.65)]"
             >
-              Get Started <ArrowRight className="h-3.5 w-3.5" />
+              Products <ArrowRight className="h-3.5 w-3.5" />
             </a>
             <button
               className="lg:hidden grid h-8 w-8 place-items-center rounded-full border border-hairline text-ink hover:bg-muted transition-colors"
@@ -144,11 +147,11 @@ export function Navbar() {
               );
             })}
             <a
-              href="#contact"
+              href="/products"
               onClick={() => setOpen(false)}
               className="mt-1 flex items-center justify-center gap-2 rounded-full bg-lime px-4 py-2.5 text-sm font-semibold text-forest shadow-[0_4px_16px_-4px_rgba(198,241,53,0.5)]"
             >
-              Get Started <ArrowRight className="h-4 w-4" />
+              Products <ArrowRight className="h-4 w-4" />
             </a>
           </motion.div>
         )}

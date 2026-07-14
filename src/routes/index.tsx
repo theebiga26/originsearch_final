@@ -165,7 +165,7 @@ function Nav() {
   ];
 
   useEffect(() => {
-    const linkEls = links.map(l => ({ href: l.href, el: document.querySelector(l.href) as HTMLElement | null }));
+    const linkEls = links.map(l => ({ href: l.href, el: l.href.startsWith('#') ? document.querySelector(l.href) as HTMLElement | null : null }));
     let ticking = false;
 
     const handleScroll = () => {
@@ -242,12 +242,12 @@ function Nav() {
 
           {/* CTA + Toggle */}
           <div className="flex items-center gap-2 shrink-0">
-            <a href="#contact" className="hidden sm:inline-flex items-center gap-3 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-1.5 pl-5 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_6px_20px_-6px_rgba(198,241,53,0.65)] group">
-              <span className="font-semibold text-[13px]">Get Started</span>
+            <Link to="/products" className="hidden sm:inline-flex items-center gap-3 bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-1.5 pl-5 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_6px_20px_-6px_rgba(198,241,53,0.65)] group">
+              <span className="font-semibold text-[13px]">Products</span>
               <div className="w-7 h-7 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
                 <ArrowRight size={14} strokeWidth={2.5} />
               </div>
-            </a>
+            </Link>
             <button
               className="lg:hidden grid h-8 w-8 place-items-center rounded-full border border-hairline text-ink hover:bg-muted transition-colors"
               onClick={() => setOpen((v) => !v)}
@@ -282,16 +282,16 @@ function Nav() {
               </a>
             );
           })}
-          <a
-            href="#contact"
+          <Link
+            to="/products"
             onClick={() => setOpen(false)}
             className="mt-1 flex items-center justify-between bg-[#C6F135] hover:bg-[#b5e022] text-[#1A2E22] rounded-full p-2 pl-6 hover:scale-[1.02] active:scale-95 transition-transform shadow-[0_4px_16px_-4px_rgba(198,241,53,0.5)] group"
           >
-            <span className="font-semibold text-sm">Get Started</span>
+            <span className="font-semibold text-sm">Products</span>
             <div className="w-8 h-8 rounded-full bg-[#1A2E22] text-[#C6F135] flex items-center justify-center shadow-inner group-hover:bg-black transition-colors">
               <ArrowRight size={16} strokeWidth={2.5} />
             </div>
-          </a>
+          </Link>
         </motion.div>
       )}
     </header>
