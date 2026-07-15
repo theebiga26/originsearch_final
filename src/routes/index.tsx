@@ -153,7 +153,7 @@ function Counter({ to, suffix = "", duration = 2 }: { to: number; suffix?: strin
 
 
 /* ---------- Cursor glow (desktop) ---------- */
-function CursorGlow() {
+export function CursorGlow() {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;

@@ -9,9 +9,7 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("");
   const location = useLocation();
 
-  const isDarkHeader = ["/privacy", "/terms", "/cookies"].includes(
-    location.pathname.replace(/\/$/, "")
-  );
+  const isDarkHeader = false;
 
   const links = [
     { href: "/#home", label: "Home" },
