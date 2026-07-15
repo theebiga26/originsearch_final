@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import logoSrc from "../../assets/Logo_1.svg";
 
 export function Footer() {
   const cols = [
@@ -98,9 +99,9 @@ export function Footer() {
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center shrink-0">
               <img
-                src="/logo2.svg"
+                src={logoSrc}
                 alt="OriginSearch Logo"
-                className="h-9 w-auto object-contain brightness-0 invert"
+                className="h-9 w-auto object-contain"
               />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#F5F3EF]/60">

@@ -108,7 +108,7 @@ function OriginSearchPortal() {
                   <ArrowUpRight />
                 </a>
                 
-                <Link to="/#contact" className="border border-[#2e4d3b] hover:bg-[#22382b] text-white text-xs font-mono font-bold px-6 py-3.5 rounded-xl flex items-center space-x-2 transition-all shadow-sm">
+                <Link to="/" hash="contact" className="border border-[#2e4d3b] hover:bg-[#22382b] text-white text-xs font-mono font-bold px-6 py-3.5 rounded-xl flex items-center space-x-2 transition-all shadow-sm">
                   <span>Connect With Us</span>
                 </Link>
                 
