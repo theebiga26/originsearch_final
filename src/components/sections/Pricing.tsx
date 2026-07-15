@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Check, ArrowRight } from "lucide-react";
 import { Reveal, Stagger, fadeUp } from "../ui/animations";
-import { PerspectiveGridCanvas } from "../../routes/index";
+import { PerspectiveGridCanvas } from "../ui/PerspectiveGrid";
 
 import basicIcon from "../../assets/Basic.svg";
 import standardIcon from "../../assets/Standard.svg";

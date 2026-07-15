@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import logoSrc from '../assets/Logo.svg';
-import { PerspectiveGridCanvas, CursorGlow } from './index';
+import { PerspectiveGridCanvas, CursorGlow } from '../components/ui/PerspectiveGrid';
 
 // Specialized Micro-Icons
 const ArrowUpRight = ({ className = "w-4 h-4" }: { className?: string }) => (
