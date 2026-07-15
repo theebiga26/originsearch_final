@@ -224,7 +224,7 @@ function Hero() {
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-lime/20 blur-[120px] rounded-full pointer-events-none z-0" />
 
         {/* Left Column (Content) */}
-        <div className="w-full lg:w-[55%] z-10 px-8 sm:px-16 lg:px-24 pt-16 pb-44 lg:pb-40">
+        <div className="w-full lg:w-[55%] z-10 px-8 sm:px-16 lg:px-24 pt-16 pb-16 lg:pb-16">
 
           <Reveal>
             <motion.span

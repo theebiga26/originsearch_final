@@ -17,10 +17,7 @@ export function Navbar() {
     { href: "/#home", label: "Home" },
     { href: "/#about", label: "About" },
     { href: "/#how", label: "How It Works" },
-    { href: "/#features", label: "Features" },
-    { href: "/#users", label: "Target Users" },
     { href: "/#pricing", label: "Pricing" },
-    { href: "/#faq", label: "FAQ" },
     { href: "/#contact", label: "Contact" },
   ];
 
@@ -106,11 +103,11 @@ export function Navbar() {
           isDarkHeader
             ? "bg-[#1A2E22] shadow-[0_8px_32px_-8px_rgba(0,0,0,0.37)] border border-[#C6F135]/20"
             : scrolled
-              ? "bg-[rgba(245,243,239,0.92)] shadow-[0_8px_32px_-8px_rgba(17,17,17,0.18)] ring-1 ring-black/[0.05]"
-              : "bg-[rgba(245,243,239,0.82)]"
+              ? "bg-[rgba(245,243,239,0.92)] shadow-[0_8px_32px_-8px_rgba(17,17,17,0.18)] border border-[#1A2E22]/10"
+              : "bg-[rgba(245,243,239,0.82)] border border-[#1A2E22]/20"
         } backdrop-blur-[14px] rounded-full`}
       >
-        <div className="flex h-12 items-center justify-between px-4">
+        <div className="flex h-16 items-center justify-between px-6">
           <Link to="/" className="flex items-center shrink-0">
             <img
               src={isDarkHeader ? "/logo2.svg" : "/logo.svg"}

@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { Link } from '@tanstack/react-router';
-import logoSrc from '../assets/Logo_1.svg';
+import React, { useState, useEffect } from 'react';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import logoSrc from '../assets/Logo.svg';
 
 // Specialized Micro-Icons
 const ArrowUpRight = ({ className = "w-4 h-4" }: { className?: string }) => (
@@ -20,8 +19,17 @@ export const Route = createFileRoute('/products')({
   component: OriginSearchPortal,
 });
 
-function OriginSearchPortal() {
+export default function OriginSearchPortal() {
   const [activeMatrix, setActiveMatrix] = useState<string>('Dynamo');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const roadmapMatrix = [
     {
@@ -55,103 +63,134 @@ function OriginSearchPortal() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f4ee] text-[#1e293b] font-sans antialiased selection:bg-[#a3e635] selection:text-black p-4 md:p-8">
+    <div className="min-h-screen bg-[#f4f4ee] text-[#1e293b] font-sans antialiased selection:bg-[#a3e635] selection:text-black px-4 sm:px-6 lg:px-8 pt-28 pb-8">
       
-      {/* Platform Header Panel */}
-      <header className="max-w-7xl mx-auto mb-6">
-        <div className="bg-[#14251c] text-white rounded-full px-6 py-3 flex items-center justify-between shadow-lg border border-[#233d2e]">
-          <Link to="/" className="flex items-center space-x-2 font-mono tracking-wider font-bold hover:opacity-80 transition-opacity">
-            <img src={logoSrc} alt="OriginSearch Logo" className="h-10 w-auto object-contain" />
-          </Link>
-          
-          <nav className="hidden lg:flex items-center space-x-8 text-xs font-mono uppercase tracking-widest text-gray-400">
-            <Link to="/" className="hover:text-[#a3e635] transition-colors">Home</Link>
-            <a href="#overview" className="text-white hover:text-[#a3e635] transition-colors">Overview</a>
-            <a href="#architecture" className="hover:text-[#a3e635] transition-colors">How It Works</a>
-            <a href="#roadmap" className="hover:text-[#a3e635] transition-colors">Features</a>
-          </nav>
+      {/* Floating Header Pill */}
+      <header className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 px-4 pointer-events-none">
+        <div
+          className={`pointer-events-auto w-full max-w-5xl transition-all duration-300 ${
+            scrolled
+              ? "bg-[rgba(245,243,239,0.92)] shadow-[0_8px_32px_-8px_rgba(17,17,17,0.18)] border border-[#1A2E22]/10"
+              : "bg-[rgba(245,243,239,0.82)] border border-[#1A2E22]/20"
+          } backdrop-blur-[14px] rounded-full`}
+        >
+          <div className="flex h-16 items-center justify-between px-6">
+            <Link to="/" className="flex items-center shrink-0 hover:opacity-80 transition-opacity">
+              <img src={logoSrc} alt="OriginSearch Logo" className="h-9 w-auto object-contain" />
+            </Link>
+            
+            <nav className="hidden lg:flex items-center gap-2">
+              <Link
+                to="/"
+                className="px-3 py-1.5 text-[13px] font-medium text-[#1A2E22]/70 hover:text-[#1A2E22] transition-colors rounded-full hover:bg-[#1A2E22]/5"
+              >
+                Home
+              </Link>
+              <a
+                href="#overview"
+                className="px-3 py-1.5 text-[13px] font-medium text-[#1A2E22]/70 hover:text-[#1A2E22] transition-colors rounded-full hover:bg-[#1A2E22]/5"
+              >
+                Overview
+              </a>
+              <a
+                href="#architecture"
+                className="px-3 py-1.5 text-[13px] font-medium text-[#1A2E22]/70 hover:text-[#1A2E22] transition-colors rounded-full hover:bg-[#1A2E22]/5"
+              >
+                How It Works
+              </a>
+              <a
+                href="#roadmap"
+                className="px-3 py-1.5 text-[13px] font-medium text-[#1A2E22]/70 hover:text-[#1A2E22] transition-colors rounded-full hover:bg-[#1A2E22]/5"
+              >
+                Features
+              </a>
+            </nav>
 
-          <Link to="/" className="bg-[#a3e635] hover:bg-[#84cc16] text-[#0d1612] font-mono font-bold text-xs px-5 py-2 rounded-full flex items-center space-x-1 transition-all">
-            <span>Get Started</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
+            <a
+              href="https://app.originsearch.one/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#a3e635] hover:bg-[#84cc16] text-[#0d1612] font-mono font-bold text-xs px-5 py-2.5 rounded-full flex items-center space-x-1 transition-all"
+            >
+              <span>Get Started</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+          </div>
         </div>
       </header>
 
       {/* Main Container Layer mimicking screenshot canvas viewports */}
-      <main className="max-w-7xl mx-auto space-y-6">
+      <main className="space-y-6 w-full">
         
         {/* Section 1: Command Center Hero Block */}
-        <section id="overview" className="bg-[#14251c] text-white rounded-[32px] p-8 md:p-16 border border-[#233d2e] relative overflow-hidden shadow-2xl">
+        <section id="overview" className="bg-forest text-white rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/10 relative overflow-hidden shadow-2xl flex flex-col lg:flex-row items-center min-h-[70vh]">
           {/* Subtle Grid overlay gridlines */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1b3125_1px,transparent_1px),linear-gradient(to_bottom,#1b3125_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1b3125_1px,transparent_1px),linear-gradient(to_bottom,#1b3125_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none z-0" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+          {/* Left Column (Content) */}
+          <div className="w-full lg:w-[55%] z-10 px-8 sm:px-16 lg:px-24 pt-16 pb-16 lg:pb-16">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#a3e635]/25 bg-[#a3e635]/8 px-4 py-1.5 text-xs font-mono uppercase tracking-widest text-[#a3e635] backdrop-blur-sm shadow-[0_0_15px_rgba(198,241,53,0.15)] mb-6">
+              <span className="text-[10px] font-mono tracking-widest uppercase">// ORIGINSEARCH AI RUNTIME</span>
+            </div>
             
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center space-x-2 bg-[#22382b] border border-[#2e4d3b] rounded-full px-4 py-1">
-                <span className="text-[10px] font-mono text-[#a3e635] tracking-widest uppercase">// ORIGINSEARCH AI RUNTIME</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-[1.1]">
-                Deploy AI Faster.<br />
-                <span className="text-[#a3e635]">Scale Without Limits.</span>
-              </h1>
-              
-              <p className="text-gray-400 text-sm md:text-base max-w-xl font-normal leading-relaxed">
-                OriginSearch.one is an AI deployment platform that transforms trained models into production-ready intelligence. Deploy, orchestrate, monitor, and scale AI applications across cloud, edge, and hybrid environments through one intelligent deployment ecosystem.
-              </p>
+            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl xl:text-[5rem] font-bold leading-[1.05] tracking-tight text-white max-w-2xl">
+              Deploy AI Faster.<br />
+              <span className="text-[#a3e635]">Scale Without Limits.</span>
+            </h1>
+            
+            <p className="mt-6 max-w-xl text-lg text-white/70 leading-relaxed font-light">
+              OriginSearch.one is an AI deployment platform that transforms trained models into production-ready intelligence. Deploy, orchestrate, monitor, and scale AI applications across cloud, edge, and hybrid environments through one intelligent deployment ecosystem.
+            </p>
 
-              <div className="pt-4 flex items-center space-x-6">
-                <a href="https://app.originsearch.one/" target="_blank" rel="noopener noreferrer" className="bg-[#a3e635] hover:bg-[#84cc16] text-[#0d1612] text-xs font-mono font-bold px-6 py-3.5 rounded-xl flex items-center space-x-2 transition-all shadow-lg shadow-[#a3e635]/10">
-                  <span>Explore the Platform</span>
-                  <ArrowUpRight />
-                </a>
-                
-                <Link to="/" hash="contact" className="border border-[#2e4d3b] hover:bg-[#22382b] text-white text-xs font-mono font-bold px-6 py-3.5 rounded-xl flex items-center space-x-2 transition-all shadow-sm">
-                  <span>Connect With Us</span>
-                </Link>
-                
-                {/* Trusted profile bubbles */}
-                <div className="hidden sm:flex items-center space-x-2 border-l border-[#233d2e] pl-6">
-                  <div className="flex -space-x-2">
-                    <div className="w-7 h-7 rounded-full bg-gray-700 border border-[#14251c]" />
-                    <div className="w-7 h-7 rounded-full bg-gray-600 border border-[#14251c]" />
-                    <div className="w-7 h-7 rounded-full bg-gray-500 border border-[#14251c]" />
-                  </div>
-                  <span className="text-[10px] font-mono font-bold tracking-wider text-gray-400 uppercase">TRUSTED BY AI TEAMS</span>
+            <div className="mt-8 flex flex-wrap items-center gap-6">
+              <a
+                href="https://app.originsearch.one/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#a3e635] hover:bg-[#84cc16] text-[#0d1612] text-xs font-mono font-bold px-6 py-3.5 rounded-xl flex items-center space-x-2 transition-all shadow-lg shadow-[#a3e635]/10"
+              >
+                <span>Get Started</span>
+                <ArrowUpRight />
+              </a>
+              
+              {/* Trusted profile bubbles */}
+              <div className="hidden sm:flex items-center space-x-2 border-l border-white/10 pl-6">
+                <div className="flex -space-x-2">
+                  <div className="w-7 h-7 rounded-full bg-gray-700 border border-forest" />
+                  <div className="w-7 h-7 rounded-full bg-gray-600 border border-forest" />
+                  <div className="w-7 h-7 rounded-full bg-gray-500 border border-forest" />
                 </div>
+                <span className="text-[10px] font-mono font-bold tracking-wider text-gray-400 uppercase">TRUSTED BY AI TEAMS</span>
               </div>
             </div>
+          </div>
 
-            {/* Right Graphic Circle Command Display */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-full border border-[#233d2e] flex items-center justify-center bg-[#0e1b14]/50 backdrop-blur-sm">
-                
-                {/* Concentric rings and glowing matrix dots */}
-                <div className="absolute inset-4 rounded-full border border-[#1c3327] border-dashed animate-[spin_120s_linear_infinite]" />
-                <div className="absolute inset-12 rounded-full border-2 border-[#a3e635]/20 flex items-center justify-center">
-                  <div className="w-36 h-36 rounded-full bg-gradient-to-br from-[#1b3a27] to-[#0e1b14] border border-[#2e5c3e] shadow-inner shadow-[#a3e635]/5 flex flex-col items-center justify-center p-4 text-center">
-                    <span className="text-[9px] font-mono text-[#a3e635] tracking-widest uppercase">CORE OPERATIONAL ENGINE</span>
-                    <span className="text-xs font-mono font-bold mt-1 text-white">NVIDIA H100</span>
-                    <span className="text-[9px] font-mono text-gray-500 mt-2">ACTIVE CLUSTER</span>
-                  </div>
+          {/* Right Column (Graphic) */}
+          <div className="w-full lg:w-[45%] z-10 flex justify-center py-12 lg:py-16">
+            <div className="relative w-72 h-72 md:w-80 md:h-80 rounded-full border border-[#233d2e] flex items-center justify-center bg-[#0e1b14]/50 backdrop-blur-sm">
+              
+              {/* Concentric rings and glowing matrix dots */}
+              <div className="absolute inset-4 rounded-full border border-[#1c3327] border-dashed animate-[spin_120s_linear_infinite]" />
+              <div className="absolute inset-12 rounded-full border-2 border-[#a3e635]/20 flex items-center justify-center">
+                <div className="w-36 h-36 rounded-full bg-gradient-to-br from-[#1b3a27] to-[#0e1b14] border border-[#2e5c3e] shadow-inner shadow-[#a3e635]/5 flex flex-col items-center justify-center p-4 text-center">
+                  <span className="text-[9px] font-mono text-[#a3e635] tracking-widest uppercase">CORE OPERATIONAL ENGINE</span>
+                  <span className="text-xs font-mono font-bold mt-1 text-white">NVIDIA H100</span>
+                  <span className="text-[9px] font-mono text-gray-500 mt-2">ACTIVE CLUSTER</span>
                 </div>
-
-                {/* Orbiting Tech Nodes */}
-                <div className="absolute top-0 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">⚙</div>
-                <div className="absolute right-2 top-1/3 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">▲</div>
-                <div className="absolute bottom-4 right-12 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">◆</div>
-                <div className="absolute bottom-4 left-12 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">✦</div>
-                <div className="absolute left-0 top-1/3 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">●</div>
               </div>
-            </div>
 
+              {/* Orbiting Tech Nodes */}
+              <div className="absolute top-0 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">⚙</div>
+              <div className="absolute right-2 top-1/3 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">▲</div>
+              <div className="absolute bottom-4 right-12 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">◆</div>
+              <div className="absolute bottom-4 left-12 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">✦</div>
+              <div className="absolute left-0 top-1/3 w-8 h-8 rounded-full bg-[#1c3327] border border-[#a3e635]/40 flex items-center justify-center text-[10px] shadow-md">●</div>
+            </div>
           </div>
         </section>
 
         {/* Section 2: Unified Foundation Core Architecture Hub (As per snapshot 3) */}
-        <section id="architecture" className="bg-white rounded-[32px] p-8 md:p-12 border border-white/60 shadow-sm">
+        <section id="architecture" className="bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-[10px] font-mono tracking-widest font-bold text-gray-400 uppercase">// PLATFORM ARCHITECTURE</span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-black tracking-tight mt-1">
@@ -213,7 +252,7 @@ function OriginSearchPortal() {
         </section>
 
         {/* Section 3: NVIDIA SDK Matrix Control Room Layout */}
-        <section id="roadmap" className="bg-[#14251c] text-white rounded-[32px] p-8 md:p-12 border border-[#233d2e] shadow-2xl">
+        <section id="roadmap" className="bg-[#14251c] text-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-[#233d2e] shadow-2xl">
           
           <div className="mb-10">
             <span className="text-[10px] font-mono text-[#a3e635] tracking-widest block mb-1 uppercase">// PRODUCTION INFERENCE STACK</span>
@@ -279,7 +318,7 @@ function OriginSearchPortal() {
         </section>
 
         {/* Section 4: Target Infrastructure Grid Framework */}
-        <section className="bg-white rounded-[32px] p-8 md:p-12 border border-white/60 shadow-sm">
+        <section className="bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             
             <div className="lg:col-span-6 space-y-4">
