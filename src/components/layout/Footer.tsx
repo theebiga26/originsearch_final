@@ -74,23 +74,23 @@ export function Footer() {
 
   const getHref = (href: string) => {
     if (typeof window === "undefined") return href;
-    
+
     const hashIndex = href.indexOf("#");
     if (hashIndex === -1) return href;
-    
+
     const pathPart = href.substring(0, hashIndex);
     const hashPart = href.substring(hashIndex);
-    
+
     // If the link points to the page we are currently on, return JUST the hash.
     // This allows native smooth scrolling without triggering a full page reload.
     if (
-      pathPart === window.location.pathname || 
+      pathPart === window.location.pathname ||
       (pathPart === "" && window.location.pathname === "/") ||
       (pathPart === "/" && window.location.pathname === "/")
     ) {
       return hashPart;
     }
-    
+
     return href;
   };
 
@@ -153,22 +153,22 @@ export function Footer() {
                 / FOLLOW US
               </h4>
               <div className="mt-6 flex flex-wrap items-center gap-4">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="relative group flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center z-10 transition-transform duration-300 hover:-translate-y-1"
-                >
-                  <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1 translate-y-1 transition-transform group-hover:translate-x-1.5 group-hover:translate-y-1.5"></div>
-                  <div className="absolute inset-0 bg-[#24382C] rounded-full border border-white/10 group-hover:border-[#C6F135]/50 transition-colors"></div>
-                  <div className="relative z-10 text-white group-hover:text-[#C6F135] transition-colors">
-                    {s.svg}
-                  </div>
-                </a>
-              ))}
+                {socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={s.label}
+                    className="relative group flex-shrink-0 w-11 h-11 rounded-full flex items-center justify-center z-10 transition-transform duration-300 hover:-translate-y-1"
+                  >
+                    <div className="absolute inset-0 bg-[#C6F135] rounded-full translate-x-1 translate-y-1 transition-transform group-hover:translate-x-1.5 group-hover:translate-y-1.5"></div>
+                    <div className="absolute inset-0 bg-[#24382C] rounded-full border border-white/10 group-hover:border-[#C6F135]/50 transition-colors"></div>
+                    <div className="relative z-10 text-white group-hover:text-[#C6F135] transition-colors">
+                      {s.svg}
+                    </div>
+                  </a>
+                ))}
               </div>
             </div>
           </div>
