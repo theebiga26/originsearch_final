@@ -29,6 +29,18 @@ export default function OriginSearchPortal() {
       setScrolled(window.scrollY > 40);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Handle cross-page hash navigation scroll
+    if (window.location.hash) {
+      const id = window.location.hash.substring(1);
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 150); // slight delay to ensure the DOM is fully rendered
+    }
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -124,7 +136,7 @@ export default function OriginSearchPortal() {
       <main className="space-y-6 w-full">
 
         {/* Section 1: Command Center Hero Block */}
-        <section id="overview" className="bg-forest text-white rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/10 relative overflow-visible shadow-2xl flex flex-col lg:flex-row items-center min-h-[55vh]">
+        <section id="overview" className="scroll-mt-24 bg-forest text-white rounded-[2.5rem] sm:rounded-[3.5rem] border border-white/10 relative overflow-visible shadow-2xl flex flex-col lg:flex-row items-center min-h-[55vh]">
           {/* Background Layer to contain grid/traces without clipping foreground */}
           <div className="absolute inset-0 rounded-[inherit] overflow-hidden pointer-events-none z-0">
             {/* Tech Geometric Traces (Left Edge) */}
@@ -209,7 +221,7 @@ export default function OriginSearchPortal() {
         </section>
 
         {/* Section 2: Unified Foundation Core Architecture Hub (As per snapshot 3) */}
-        <section id="architecture" className="bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
+        <section id="architecture" className="scroll-mt-24 bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-[10px] font-mono tracking-widest font-bold text-gray-400 uppercase">// PLATFORM ARCHITECTURE</span>
             <h2 className="text-3xl md:text-4xl font-extrabold text-black tracking-tight mt-1">
@@ -271,7 +283,7 @@ export default function OriginSearchPortal() {
         </section>
 
         {/* Section 3: NVIDIA SDK Matrix Control Room Layout */}
-        <section id="roadmap" className="bg-forest text-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/10 relative overflow-hidden shadow-2xl">
+        <section id="roadmap" className="scroll-mt-24 bg-forest text-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/10 relative overflow-hidden shadow-2xl">
           {/* Background Layer to contain grid/traces without clipping foreground */}
           <div className="absolute inset-0 rounded-[inherit] overflow-hidden pointer-events-none z-0">
             {/* Tech Geometric Traces (Left Edge) */}
@@ -356,7 +368,7 @@ export default function OriginSearchPortal() {
         </section>
 
         {/* Section 4: Target Infrastructure Grid Framework */}
-        <section className="bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
+        <section id="hardware" className="scroll-mt-24 bg-white rounded-[32px] px-8 sm:px-16 lg:px-24 py-8 md:py-12 border border-white/60 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
             <div className="lg:col-span-6 space-y-4">

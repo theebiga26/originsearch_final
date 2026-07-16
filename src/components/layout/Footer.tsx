@@ -15,12 +15,11 @@ export function Footer() {
       ],
     },
     {
-      title: "Resources",
+      title: "Products",
       links: [
-        { label: "Documentation", href: "#" },
-        { label: "Developer API", href: "#" },
-        { label: "Integrations", href: "#" },
-        { label: "Security", href: "#" },
+        { label: "Overview", href: "/products#overview" },
+        { label: "How It Works", href: "/products#architecture" },
+        { label: "Features", href: "/products#roadmap" },
       ],
     },
   ];
@@ -74,12 +73,24 @@ export function Footer() {
   ];
 
   const getHref = (href: string) => {
+    if (typeof window === "undefined") return href;
+    
     const hashIndex = href.indexOf("#");
     if (hashIndex === -1) return href;
-    const hash = href.substring(hashIndex);
-    if (typeof window !== "undefined" && window.location.pathname === "/") {
-      return hash;
+    
+    const pathPart = href.substring(0, hashIndex);
+    const hashPart = href.substring(hashIndex);
+    
+    // If the link points to the page we are currently on, return JUST the hash.
+    // This allows native smooth scrolling without triggering a full page reload.
+    if (
+      pathPart === window.location.pathname || 
+      (pathPart === "" && window.location.pathname === "/") ||
+      (pathPart === "/" && window.location.pathname === "/")
+    ) {
+      return hashPart;
     }
+    
     return href;
   };
 
@@ -96,7 +107,7 @@ export function Footer() {
       <div className="relative z-10 w-full bg-[#1A2E22] rounded-[2.5rem] sm:rounded-[3.5rem] border-t border-white/10 p-8 sm:p-16 shadow-[0_-20px_60px_rgba(0,0,0,0.5)] flex flex-col mt-16 sm:mt-24">
         <div className="grid gap-10 lg:grid-cols-4">
           {/* Logo Column */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 flex flex-col justify-start">
             <Link to="/" className="flex items-center shrink-0">
               <img
                 src={logoSrc}
@@ -110,33 +121,38 @@ export function Footer() {
           </div>
 
           {/* Links Columns */}
-          {cols.map((c) => (
-            <div key={c.title}>
-              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#C6F135]">
-                / {c.title}
-              </h4>
-              <ul className="mt-4 space-y-2.5">
-                {c.links.map((l) => (
-                  <li key={l.label}>
-                    <a
-                      href={getHref(l.href)}
-                      className="group flex items-center text-sm text-[#F5F3EF]/70 transition-all hover:text-[#C6F135] hover:translate-x-1"
-                    >
-                      <ChevronRight className="w-3 h-3 mr-2 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                      {l.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <div className="lg:col-span-2 grid grid-cols-2 gap-10">
+            {cols.map((c) => (
+              <div key={c.title} className="flex flex-col lg:items-center">
+                <div className="w-full max-w-[170px]">
+                  <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#C6F135]">
+                    / {c.title}
+                  </h4>
+                  <ul className="mt-4 space-y-2.5">
+                    {c.links.map((l) => (
+                      <li key={l.label}>
+                        <a
+                          href={getHref(l.href)}
+                          className="group flex items-center text-sm text-[#F5F3EF]/70 transition-all hover:text-[#C6F135] hover:translate-x-1"
+                        >
+                          <ChevronRight className="w-3 h-3 mr-2 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all" />
+                          {l.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* Socials Column */}
-          <div>
-            <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#C6F135]">
-              / FOLLOW US
-            </h4>
-            <div className="mt-6 flex flex-wrap items-center gap-4">
+          <div className="flex flex-col lg:items-end">
+            <div>
+              <h4 className="font-mono text-xs font-bold uppercase tracking-widest text-[#C6F135]">
+                / FOLLOW US
+              </h4>
+              <div className="mt-6 flex flex-wrap items-center gap-4">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -153,6 +169,7 @@ export function Footer() {
                   </div>
                 </a>
               ))}
+              </div>
             </div>
           </div>
         </div>
