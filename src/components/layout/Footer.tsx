@@ -19,7 +19,7 @@ export function Footer() {
       links: [
         { label: "Overview", href: "/products#overview" },
         { label: "How It Works", href: "/products#architecture" },
-        { label: "Features", href: "/products#roadmap" },
+        { label: "Roadmap", href: "/products#roadmap" },
       ],
     },
   ];
